@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sha1am Portfolio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>sha1am Portfolio Dashboard</h1>
+    </header>
+
+    <section>
+        <h2>Links</h2>
+        <ul>
+        {% for label, url in links.items() %}
+            <li><a href="{{ url }}" target="_blank" rel="noopener">{{ label }}</a></li>
+        {% endfor %}
+        </ul>
+    </section>
+
+    <section>
+        <h2>Solved Questions Graph</h2>
+        <div id="graph"></div>
+    </section>
+
+    <section>
+        <h2>Recently Solved Questions</h2>
+        <ul>
+        {% for q in recent_questions %}
+            <li>{{ q.date }} - {{ q.platform }}: {{ q.title }}</li>
+        {% endfor %}
+        </ul>
+    </section>
+
+    <script>
+        var graphData = {{ graphJSON|safe }};
+        Plotly.newPlot('graph', graphData.data, graphData.layout);
+    </script>
+</body>
+</html>

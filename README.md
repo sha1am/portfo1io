@@ -1,4 +1,3 @@
-# portfo1io
 My portfolio website showcasing my projects, skills, and achievements. This repository now contains:
 
 * **Frontend** – a React application inspired by [takeuforward profile](https://takeuforward.org/profile/sha1am).
