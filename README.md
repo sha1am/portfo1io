@@ -6,6 +6,5 @@ This repository contains:
 - **backend/** – a simple Django REST Framework (DRF) API.
 - **Jenkinsfile** – example pipeline for building and deploying both parts.
 
-Legacy code for a Flask dashboard and a small Node backend is kept in the `dashboard/` and `node_backend/` folders.
-
+Only a React frontend and a DRF backend are maintained.
 The frontend can be hosted on **Netlify** while the DRF backend can run on **Render**.

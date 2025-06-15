@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "1.0.0",
   "description": "",
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:8000",
   "main": "index.js",
   "scripts": {
     "start": "webpack serve --mode development",
