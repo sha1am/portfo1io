@@ -1,8 +1,15 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-.app {
-  text-align: center;
+h1, h2 {
+  font-weight: bold;
+}
+
+/* Add your styles here */
+
+:root {
+  --primary-color: #007aff; /* Change to your preferred color */
+  --secondary-color: #ff9500; /* Another color */
 }

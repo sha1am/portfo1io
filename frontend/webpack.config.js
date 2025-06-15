@@ -15,7 +15,7 @@ module.exports = {
         use: 'babel-loader',
       },
       {
-        test: /\.css$/,
+        test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
     ],
@@ -26,8 +26,11 @@ module.exports = {
     }),
   ],
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    static: {
+        directory: path.join(__dirname, 'public'),
+    },
     compress: true,
-    port: 9000,
-  },
+    port: 3000,
+}
+,
 };

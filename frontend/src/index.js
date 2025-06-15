@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shadab Alam Portfolio</title>
-</head>
-<body>
-  <div id="root"></div>
-</body>
-</html>
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+import ErrorBoundary from './components/ErrorBoundary.js';
+import './styles/App.css';
+
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+root.render(<ErrorBoundary><App /></ErrorBoundary>);
