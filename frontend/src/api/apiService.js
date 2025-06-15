@@ -1,7 +1,7 @@
 // src/api/apiService.js
 
 // Base URL for API requests, defaulting to localhost if the environment variable is not set
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 // Function to fetch data from a specific endpoint
 export const fetchData = async (endpoint) => {
