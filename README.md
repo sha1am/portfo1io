@@ -1,14 +1,7 @@
-# portfo1io
+My portfolio website showcasing my projects, skills, and achievements. This repository now contains:
 
-This repo contains a simple portfolio dashboard powered by Flask and Plotly.
-It displays links to my coding profiles, an interactive graph of solved
-questions, and a list of recently solved problems.
+* **Frontend** – a React application inspired by [takeuforward profile](https://takeuforward.org/profile/sha1am).
+* **Backend** – a simple Django REST Framework (DRF) API.
+* **CI/CD** – example Jenkins pipeline for building and deploying both parts.
 
-Run the app locally with:
-
-```bash
-pip install -r requirements.txt
-python app.py
-```
-
-Then visit `http://127.0.0.1:5000/` in your browser.
+The frontend can be hosted on **Netlify** while the DRF backend can run on **Render**.

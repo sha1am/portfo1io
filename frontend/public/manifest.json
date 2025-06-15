@@ -1,0 +1,15 @@
+{
+  "short_name": "Portfolio",
+  "name": "Shadab Alam Portfolio",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "48x48 72x72 96x96 144x144 192x192 256x256 384x384 512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
