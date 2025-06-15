@@ -13,7 +13,7 @@ pipeline {
 
         stage('Build backend') {
             steps {
-                dir('drf_backend') {
+                dir('backend') {
                     sh 'pip install -r requirements.txt'
                     sh 'python manage.py migrate'
                 }
