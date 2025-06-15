@@ -1,2 +1,8 @@
 # portfo1io
-My portfolio website showcasing my projects, skills, and achievements. Built with React.js and featuring interactive elements, dynamic content, and light/dark themes. Hosted at sha1am.netlify.app. Includes a contact form and links to my resume, LinkedIn, and GitHub profiles.
+My portfolio website showcasing my projects, skills, and achievements. This repository now contains:
+
+* **Frontend** – a React application inspired by [takeuforward profile](https://takeuforward.org/profile/sha1am).
+* **Backend** – a simple Django REST Framework (DRF) API.
+* **CI/CD** – example Jenkins pipeline for building and deploying both parts.
+
+The frontend can be hosted on **Netlify** while the DRF backend can run on **Render**.
