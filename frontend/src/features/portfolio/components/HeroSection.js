@@ -1,5 +1,5 @@
 import React from 'react';
-import portrait from '../../../assets/images/profile-picture.jpg';
+import portrait from '../../../assets/images/profile-picture.png';
 import ResumeStage from './ResumeStage';
 import SocialLinks from './SocialLinks';
 

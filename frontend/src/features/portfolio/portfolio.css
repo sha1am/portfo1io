@@ -282,7 +282,7 @@
 
 .hero-stage {
   position: relative;
-  min-height: 760px;
+  min-height: 840px;
   perspective: 1800px;
   scroll-margin-top: 7rem;
   animation: rise-in 850ms 120ms ease-out both;
@@ -330,14 +330,26 @@
 .resume-page--center {
   left: 50%;
   z-index: 3;
-  transform: translateX(-50%) rotateY(-7deg);
+  width: min(620px, 80%);
+  min-height: min(78vh, 760px);
+  padding: 1rem;
+  transform:
+    translateX(-50%)
+    translate(var(--page-shift-x, 0), var(--page-shift-y, 0))
+    rotateX(var(--page-rotate-x, -7deg))
+    rotateY(var(--page-rotate-y, -14deg))
+    rotateZ(var(--page-rotate-z, 1.2deg));
+  transition: transform 500ms ease, box-shadow 350ms ease;
+  box-shadow:
+    0 38px 100px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
 .resume-page--left {
   left: 18%;
   top: 18%;
   z-index: 2;
-  width: min(240px, 28%);
+  width: min(180px, 18%);
   min-height: 520px;
   transform: translateX(-50%) rotateY(38deg) rotateZ(1deg);
   opacity: 0.92;
@@ -348,11 +360,30 @@
   left: 84%;
   top: 14%;
   z-index: 1;
-  width: min(250px, 29%);
+  width: min(190px, 19%);
   min-height: 550px;
   transform: translateX(-50%) rotateY(-48deg) rotateZ(-0.5deg);
   opacity: 0.9;
   animation: float-page-right 9s ease-in-out infinite;
+}
+
+.resume-page--interactive {
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.resume-page--interactive.is-dragging {
+  cursor: grabbing;
+}
+
+.resume-page__sheet {
+  position: relative;
+  height: 100%;
+  min-height: inherit;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  background: #fff;
 }
 
 .resume-page__header {
@@ -401,7 +432,7 @@
 .resume-page__preview-shell {
   width: 100%;
   height: 100%;
-  min-height: 590px;
+  min-height: min(67vh, 670px);
   border: 1px solid rgba(0, 0, 0, 0.12);
   background: #fff;
   overflow: hidden;
@@ -410,19 +441,38 @@
 .resume-page__preview-frame {
   width: 100%;
   height: 100%;
-  min-height: 590px;
+  min-height: min(67vh, 670px);
   border: 0;
   background: #fff;
+  pointer-events: none;
+}
+
+.resume-page__fold-pane {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 26%;
+  height: 100%;
+  background:
+    linear-gradient(270deg, rgba(255, 255, 255, 0.96), rgba(238, 238, 236, 0.82) 45%, rgba(215, 215, 213, 0.22));
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: inset 20px 0 30px rgba(0, 0, 0, 0.08);
+  transform-origin: left center;
+  transform: rotateY(calc(var(--page-fold, 0deg) * -1));
+  opacity: clamp(0, calc(var(--page-fold, 0deg) / 55), 1);
+  transition: transform 500ms ease, opacity 350ms ease;
 }
 
 .resume-page__preview-actions {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 0.8rem;
   padding-top: 0.9rem;
 }
 
-.resume-page__preview-actions a {
+.resume-page__preview-actions a,
+.resume-page__preview-actions button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -435,6 +485,8 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  background: #f9fafc;
+  cursor: pointer;
 }
 
 .stage-control {
@@ -799,17 +851,17 @@
   }
 
   .hero-stage {
-    min-height: 540px;
+    min-height: 700px;
   }
 
   .resume-page--center {
-    width: min(360px, 72%);
+    width: min(500px, 86%);
   }
 
   .resume-page--left,
   .resume-page--right {
-    width: min(180px, 26%);
-    min-height: 420px;
+    width: min(150px, 18%);
+    min-height: 380px;
   }
 
   .stage-control {
@@ -855,19 +907,19 @@
   }
 
   .hero-stage {
-    min-height: 430px;
+    min-height: 540px;
   }
 
   .resume-page--center {
     top: 8%;
-    width: 74%;
-    min-height: 360px;
+    width: 92%;
+    min-height: 420px;
     padding: 0.9rem;
   }
 
   .resume-page__preview-shell,
   .resume-page__preview-frame {
-    min-height: 300px;
+    min-height: 360px;
   }
 
   .resume-page--left,

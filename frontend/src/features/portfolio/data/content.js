@@ -19,7 +19,7 @@ export const heroContent = {
   name: 'Shadab Alam',
   role: 'Software Development Engineer',
   highlights: ['Backend Developer', 'Problem Solver', 'Tech Enthusiast'],
-  primaryActionLabel: 'View My Resume',
+  primaryActionLabel: 'View My Resume (3D)',
   secondaryActionLabel: "Let's Build",
 };
 
