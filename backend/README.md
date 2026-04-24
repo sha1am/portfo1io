@@ -2,6 +2,19 @@
 
 This backend is a small Go HTTP API intended for local development and Render deployment.
 
+## Structure
+
+```text
+cmd/api/            # main package
+internal/app/       # bootstraps config, logging, and http.Server
+internal/config/    # environment configuration
+internal/httpapi/   # router, middleware, and transport tests
+internal/status/    # status feature handlers and service
+internal/web/       # shared response helpers
+```
+
+This keeps feature logic separate from HTTP transport and startup concerns, which makes it easier to add more endpoints later.
+
 ## Development
 
 ```bash
