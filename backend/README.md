@@ -1,13 +1,22 @@
-# Django REST Backend
+# Go Backend
 
-This backend provides a simple API endpoint for the portfolio site.
+This backend is a small Go HTTP API intended for local development and Render deployment.
 
 ## Development
 
 ```bash
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
+go run ./cmd/api
 ```
 
-The root endpoint (`/`) returns a JSON message confirming the server is running.
+The API defaults to `http://localhost:8000/`.
+
+## Endpoints
+
+- `GET /` returns a status message.
+- `GET /health` returns a health check response.
+- `GET /api/status` returns the same status payload as the root endpoint.
+
+## Configuration
+
+- `PORT` sets the server port. Default: `8000`
+- `CORS_ALLOW_ORIGIN` sets the allowed origin for CORS. Default: `*`
