@@ -140,7 +140,7 @@ const ResumePage = ({ className, title, lines }) => (
 
 const App = () => {
   const scrollToResume = () => {
-    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('resume-stage')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   return (
@@ -209,7 +209,7 @@ const App = () => {
             </div>
           </div>
 
-          <div className="hero-stage">
+          <div className="hero-stage" id="resume-stage">
             <div className="stage-glow" />
             <div className="stage-rings" />
             <ResumePage
