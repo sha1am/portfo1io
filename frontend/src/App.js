@@ -42,9 +42,8 @@ const stats = [
 ];
 
 const skills = [
+  'Go',
   'Python',
-  'Django',
-  'DRF',
   'React',
   'JavaScript',
   'PostgreSQL',
@@ -84,10 +83,10 @@ const experienceCards = [
   },
   {
     range: '2023 - 2024',
-    role: 'Python Developer',
-    company: 'Shipping automation and analytics systems',
+    role: 'Backend Developer',
+    company: 'Shipping APIs, automation, and analytics systems',
     points: [
-      'Worked across Python, Django, SQL, and product-facing tooling.',
+      'Worked across Go, Python, SQL, and product-facing tooling.',
       'Took features from implementation to deployment with practical ownership.',
     ],
   },
@@ -119,7 +118,7 @@ const ResumePage = ({ className, title, lines }) => (
   <article className={`resume-page ${className}`}>
     <div className="resume-page__header">
       <span className="resume-page__name">Shadab Alam</span>
-      <span className="resume-page__meta">Backend Engineer | Python | Django</span>
+      <span className="resume-page__meta">Backend Engineer | Go | Python</span>
     </div>
     <div className="resume-page__section">
       <span className="resume-page__section-title">{title}</span>
@@ -226,7 +225,7 @@ const App = () => {
               title="Experience"
               lines={[
                 'Designed backend services and document pipelines.',
-                'Shipped features across Django, React, and infra.',
+                'Shipped features across Go, React, and infra.',
                 'Improved throughput, reliability, and user impact.',
               ]}
             />

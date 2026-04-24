@@ -2,7 +2,7 @@
 
 This document explains how to deploy the two parts of the project.
 
-## Deploying the frontend to Netlify
+## Deploying the frontend to Vercel
 
 1. Build the React app:
    ```bash
@@ -11,9 +11,11 @@ This document explains how to deploy the two parts of the project.
    npm run build
    ```
    The production files are generated in the `dist/` directory.
-2. Sign in to [Netlify](https://www.netlify.com/) and create a new site from your repository.
-3. Set the **build command** to `npm run build` and the **publish directory** to `frontend/dist`.
-4. Deploy the site. Netlify will host the compiled files and provide a live URL.
+2. Sign in to [Vercel](https://vercel.com/) and create a new project from your repository.
+3. Set the project root to `frontend`.
+4. Set the **build command** to `npm run build` and the **output directory** to `dist`.
+5. Add `REACT_APP_API_URL` as an environment variable pointing at your Render backend URL.
+6. Deploy the site. Vercel will host the compiled frontend and provide a live URL.
 
 ## Deploying the backend to Render
 
@@ -21,7 +23,7 @@ This document explains how to deploy the two parts of the project.
 2. Create a new **Web Service** on [Render](https://render.com/) and connect your repo.
 3. Set the root directory to `backend`.
 4. Use the following commands when prompted:
-   - **Build Command**: `pip install -r requirements.txt && python manage.py migrate`
-   - **Start Command**: `python manage.py runserver 0.0.0.0:$PORT`
-5. Optionally configure environment variables such as `DJANGO_SECRET_KEY`.
+   - **Build Command**: `go build ./...`
+   - **Start Command**: `go run ./cmd/api`
+5. Optionally configure environment variables such as `CORS_ALLOW_ORIGIN` for your Vercel domain.
 6. Render will build and launch the API, exposing a public URL for your backend.

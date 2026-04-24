@@ -14,8 +14,8 @@ pipeline {
         stage('Build backend') {
             steps {
                 dir('backend') {
-                    sh 'pip install -r requirements.txt'
-                    sh 'python manage.py migrate'
+                    sh 'go test ./...'
+                    sh 'go build ./...'
                 }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo 'Deploying frontend to Netlify and backend to Render...'
+                echo 'Deploying frontend to Vercel and backend to Render...'
                 // Deployment commands would go here
             }
         }

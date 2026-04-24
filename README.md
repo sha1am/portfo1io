@@ -3,10 +3,10 @@
 This repository contains:
 
 - **frontend/** – a React application inspired by [takeuforward profile](https://takeuforward.org/profile/sha1am).
-- **backend/** – a simple Django REST Framework (DRF) API.
+- **backend/** – a small Go HTTP API.
 - **Jenkinsfile** – example pipeline for building and deploying both parts.
 
-Only a React frontend and a DRF backend are maintained. The frontend can be hosted on **Netlify** while the DRF backend can run on **Render**.
+Only a React frontend and a Go backend are maintained. The frontend is intended for **Vercel** and the backend is intended for **Render**.
 
 ## Running locally
 
@@ -21,9 +21,7 @@ This starts a development server at `http://localhost:3000`.
 ### Backend
 ```bash
 cd backend
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
+go run ./cmd/api
 ```
 The API will then be available at `http://localhost:8000/`.
 
