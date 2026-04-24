@@ -83,6 +83,52 @@ export const LAYOUT = {
   },
 };
 
+// Resume Constants
+export const RESUME = {
+  PAGE: {
+    TOP: '0%',
+    WIDTH: 'min(400px, 44%)',
+    MIN_HEIGHT: '620px',
+    PADDING: '1.8rem 1.6rem',
+    BORDER_WIDTH: '12px',
+    BORDER_RADIUS: '1.8rem',
+  },
+  STAGE: {
+    MIN_HEIGHT: 780,
+    PERSPECTIVE: 1800,
+    SCROLL_MARGIN_TOP: '7rem',
+  },
+  PODIUM: {
+    BOTTOM: '-2rem',
+    WIDTH: 'min(620px, 88%)',
+    HEIGHT: '280px',
+    ROTATE_X: '60deg',
+    ROTATE_Z: '5deg',
+    GLOW_BOTTOM: '1.8rem',
+    GLOW_WIDTH: '70%',
+    GLOW_HEIGHT: '4rem',
+  },
+  POSE: {
+    INITIAL: {
+      rotateX: -7,
+      rotateY: -14,
+      rotateZ: 1.2,
+      shiftX: 0,
+      shiftY: 0,
+    },
+    FOLDED: {
+      rotateX: -4,
+      rotateY: -34,
+      rotateZ: 2.2,
+      shiftX: 14,
+      shiftY: -6,
+      fold: 55,
+    },
+    RESET_DELAY: 650,
+    FOLD_DELAY: 1400,
+  },
+};
+
 // Color Constants
 export const COLORS = {
   DARK: {
@@ -161,14 +207,3 @@ export const A11Y = {
   },
 };
 
-// Resume Constants
-export const RESUME = {
-  INITIAL_POSE: {
-    rotateX: -7,
-    rotateY: -14,
-    rotateZ: 1.2,
-    shiftX: 0,
-    shiftY: 0,
-  },
-  RESET_DELAY: 650,
-};

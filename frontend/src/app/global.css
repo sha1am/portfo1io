@@ -13,6 +13,8 @@ body {
   min-width: 320px;
   color: var(--text);
   font-family: "Avenir Next", "Segoe UI", sans-serif;
+  background: var(--bg-primary);
+  transition: background-color 220ms ease, color 220ms ease;
 }
 
 a {
@@ -22,7 +24,7 @@ a {
 
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid rgba(111, 183, 255, 0.82);
+  outline: 2px solid var(--focus-ring, rgba(111, 183, 255, 0.82));
   outline-offset: 3px;
 }
 

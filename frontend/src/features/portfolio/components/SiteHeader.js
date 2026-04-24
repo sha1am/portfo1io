@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { THEME, STORAGE, A11Y, LAYOUT, THEME_CSS_VARS } from '../../../shared/constants';
+import { THEME, STORAGE, A11Y } from '../../../shared/constants';
 
 const SiteHeader = ({ navigationItems }) => {
   const [theme, setTheme] = useState(THEME.DEFAULT);
@@ -8,23 +8,12 @@ const SiteHeader = ({ navigationItems }) => {
     const savedTheme = localStorage.getItem(STORAGE.KEYS.THEME) || THEME.DEFAULT;
     setTheme(savedTheme);
     document.documentElement.setAttribute('data-theme', savedTheme);
-    applyThemeVariables(savedTheme);
   }, []);
-
-  const applyThemeVariables = (currentTheme) => {
-    const root = document.documentElement;
-    const themeVars = THEME_CSS_VARS[currentTheme.toUpperCase()];
-    
-    Object.entries(themeVars).forEach(([property, value]) => {
-      root.style.setProperty(property, value);
-    });
-  };
 
   const toggleTheme = () => {
     const newTheme = theme === THEME.DARK ? THEME.LIGHT : THEME.DARK;
     setTheme(newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
-    applyThemeVariables(newTheme);
     localStorage.setItem(STORAGE.KEYS.THEME, newTheme);
   };
 

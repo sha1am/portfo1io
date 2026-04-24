@@ -12,7 +12,7 @@ const ResumePreview = ({ className, resumeAsset }) => {
   const expandTimer = useRef(null);
 
   const clearExpandTimer = () => {
-    if (exportTimer.current) {
+    if (expandTimer.current) {
       window.clearTimeout(expandTimer.current);
       expandTimer.current = null;
     }
@@ -31,7 +31,7 @@ const ResumePreview = ({ className, resumeAsset }) => {
     setPose(RESUME.POSE.INITIAL);
   };
 
-  const scheduleReset = (delay = RESUME.RESET_DELAY) => {
+  const scheduleReset = (delay = RESUME.POSE.RESET_DELAY) => {
     clearResetTimer();
     resetTimer.current = window.setTimeout(() => {
       setIsDragging(false);
@@ -177,7 +177,7 @@ const ResumeStage = ({ cards, resumeAsset }) => (
 
     <div className="stage-control">
       <span className="stage-control__icon">↻</span>
-      <span>Drag, fold, release</span>
+      <span>Drag to inspect</span>
     </div>
     <div className="stage-arrows" aria-hidden="true">
       <span>‹</span>
