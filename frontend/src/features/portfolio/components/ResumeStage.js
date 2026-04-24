@@ -5,14 +5,14 @@ const ResumePreview = ({ className, resumeAsset }) => (
     <div className="resume-page__preview-shell">
       <iframe
         className="resume-page__preview-frame"
-        src={resumeAsset.previewUrl}
-        title="Resume preview from Google Drive"
+        src={resumeAsset.firstPagePreviewUrl}
+        title="Resume page 1 preview from Google Drive"
         loading="lazy"
         allow="autoplay"
       />
     </div>
     <div className="resume-page__preview-actions">
-      <a href={resumeAsset.previewUrl} target="_blank" rel="noreferrer">
+      <a href={resumeAsset.viewUrl} target="_blank" rel="noreferrer">
         Open
       </a>
       <a href={resumeAsset.downloadUrl} target="_blank" rel="noreferrer">
@@ -59,7 +59,7 @@ const ResumeStage = ({ cards, resumeAsset }) => (
 
     <div className="stage-control">
       <span className="stage-control__icon">↻</span>
-      <span>Live from Google Drive</span>
+      <span>Resume page 1</span>
     </div>
     <div className="stage-arrows" aria-hidden="true">
       <span>‹</span>

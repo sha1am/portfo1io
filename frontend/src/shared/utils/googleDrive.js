@@ -11,11 +11,13 @@ export const getGoogleDriveFileId = (urlOrId) => {
 
 export const createGoogleDriveAsset = (urlOrId) => {
   const fileId = getGoogleDriveFileId(urlOrId);
+  const previewBaseUrl = `https://drive.google.com/file/d/${fileId}/preview`;
 
   return {
     fileId,
     viewUrl: `https://drive.google.com/file/d/${fileId}/view`,
-    previewUrl: `https://drive.google.com/file/d/${fileId}/preview`,
+    previewUrl: previewBaseUrl,
+    firstPagePreviewUrl: `${previewBaseUrl}#page=1`,
     downloadUrl: `https://drive.google.com/uc?export=download&id=${fileId}`,
   };
 };

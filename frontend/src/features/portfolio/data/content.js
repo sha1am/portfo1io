@@ -19,16 +19,16 @@ export const heroContent = {
   name: 'Shadab Alam',
   role: 'Software Development Engineer',
   highlights: ['Backend Developer', 'Problem Solver', 'Tech Enthusiast'],
-  primaryActionLabel: 'Open Resume',
+  primaryActionLabel: 'View My Resume',
   secondaryActionLabel: "Let's Build",
 };
 
-export const resumeAsset = createGoogleDriveAsset('https://drive.google.com/file/d/1Y80xR8pfJcM0fsc5lOouxO5SEdeLpYfV/view');
+export const resumeAsset = createGoogleDriveAsset('https://drive.google.com/file/d/18BKUMCl3JeyyVsl-oCXtR-06_udcEysw/view?usp=drivesdk');
 
 export const resumeCards = [
   {
     className: 'resume-page--left',
-    title: 'Professional Summary',
+    title: 'Summary',
     lines: [
       'Backend-focused engineer with practical product sense.',
       'Builds APIs, workflows, and systems for scale.',
@@ -41,11 +41,11 @@ export const resumeCards = [
   },
   {
     className: 'resume-page--right',
-    title: 'Projects',
+    title: 'Highlights',
     lines: [
-      'Portfolio platform with immersive presentation.',
-      'Internal tools and automation-heavy products.',
-      'Applied ML and workflow optimization work.',
+      'Production APIs and platform tooling.',
+      'Scalable backend and data-heavy systems.',
+      'Hands-on delivery across product and infra.',
     ],
   },
 ];

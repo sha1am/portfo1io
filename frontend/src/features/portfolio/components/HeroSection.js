@@ -24,7 +24,7 @@ const HeroSection = ({ heroContent, socialLinks, resumeCards, resumeAsset }) => 
       </p>
 
       <div className="hero-actions">
-        <a className="primary-button" href={resumeAsset.previewUrl} target="_blank" rel="noreferrer">
+        <a className="primary-button" href={resumeAsset.viewUrl} target="_blank" rel="noreferrer">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
               d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-11A.5.5 0 0 1 6 20V4a.5.5 0 0 1 .5-.5h.5Zm7 1.5v3h3"
