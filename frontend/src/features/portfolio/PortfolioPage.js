@@ -7,6 +7,7 @@ import {
   navigationItems,
   projectCards,
   resumeCards,
+  resumeAsset,
   skillsSection,
   socialLinks,
   stats,
@@ -17,10 +18,6 @@ import SiteHeader from './components/SiteHeader';
 import StatsStrip from './components/StatsStrip';
 
 const PortfolioPage = () => {
-  const scrollToResume = () => {
-    document.getElementById('resume-stage')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  };
-
   return (
     <div className="app-shell">
       <div className="app-background" />
@@ -31,7 +28,7 @@ const PortfolioPage = () => {
           heroContent={heroContent}
           socialLinks={socialLinks}
           resumeCards={resumeCards}
-          onPrimaryAction={scrollToResume}
+          resumeAsset={resumeAsset}
         />
 
         <div className="scroll-cue">Scroll Down</div>

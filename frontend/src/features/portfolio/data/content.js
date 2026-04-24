@@ -1,3 +1,5 @@
+import { createGoogleDriveAsset } from '../../../shared/utils/googleDrive';
+
 export const navigationItems = [
   { href: '#about', label: 'About' },
   { href: '#skills', label: 'Skills' },
@@ -17,9 +19,11 @@ export const heroContent = {
   name: 'Shadab Alam',
   role: 'Software Development Engineer',
   highlights: ['Backend Developer', 'Problem Solver', 'Tech Enthusiast'],
-  primaryActionLabel: 'View My Resume (3D)',
+  primaryActionLabel: 'Open Resume',
   secondaryActionLabel: "Let's Build",
 };
+
+export const resumeAsset = createGoogleDriveAsset('https://drive.google.com/file/d/1Y80xR8pfJcM0fsc5lOouxO5SEdeLpYfV/view');
 
 export const resumeCards = [
   {
@@ -33,12 +37,7 @@ export const resumeCards = [
   },
   {
     className: 'resume-page--center',
-    title: 'Experience',
-    lines: [
-      'Designed backend services and document pipelines.',
-      'Shipped features across Go, React, and infra.',
-      'Improved throughput, reliability, and user impact.',
-    ],
+    type: 'preview',
   },
   {
     className: 'resume-page--right',

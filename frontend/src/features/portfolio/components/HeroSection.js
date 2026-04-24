@@ -1,9 +1,9 @@
 import React from 'react';
-import portrait from '../../../assets/images/newPP_r.png';
+import portrait from '../../../assets/images/profile-picture.jpg';
 import ResumeStage from './ResumeStage';
 import SocialLinks from './SocialLinks';
 
-const HeroSection = ({ heroContent, socialLinks, resumeCards, onPrimaryAction }) => (
+const HeroSection = ({ heroContent, socialLinks, resumeCards, resumeAsset }) => (
   <section className="hero-section">
     <SocialLinks links={socialLinks} />
 
@@ -24,7 +24,7 @@ const HeroSection = ({ heroContent, socialLinks, resumeCards, onPrimaryAction })
       </p>
 
       <div className="hero-actions">
-        <button className="primary-button" type="button" onClick={onPrimaryAction}>
+        <a className="primary-button" href={resumeAsset.previewUrl} target="_blank" rel="noreferrer">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
               d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-11A.5.5 0 0 1 6 20V4a.5.5 0 0 1 .5-.5h.5Zm7 1.5v3h3"
@@ -37,14 +37,14 @@ const HeroSection = ({ heroContent, socialLinks, resumeCards, onPrimaryAction })
             <path d="M9 12h6M9 15h6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
           </svg>
           {heroContent.primaryActionLabel}
-        </button>
+        </a>
         <a className="ghost-button" href="#contact">
           {heroContent.secondaryActionLabel}
         </a>
       </div>
     </div>
 
-    <ResumeStage cards={resumeCards} />
+    <ResumeStage cards={resumeCards} resumeAsset={resumeAsset} />
   </section>
 );
 

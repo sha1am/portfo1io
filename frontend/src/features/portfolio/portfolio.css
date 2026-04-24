@@ -398,6 +398,45 @@
   line-height: 1.55;
 }
 
+.resume-page__preview-shell {
+  width: 100%;
+  height: 100%;
+  min-height: 570px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+  overflow: hidden;
+}
+
+.resume-page__preview-frame {
+  width: 100%;
+  height: 100%;
+  min-height: 570px;
+  border: 0;
+  background: #fff;
+}
+
+.resume-page__preview-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  padding-top: 0.9rem;
+}
+
+.resume-page__preview-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem;
+  padding: 0 0.9rem;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 999px;
+  color: #0b356a;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .stage-control {
   position: absolute;
   right: 12%;
@@ -824,6 +863,11 @@
     width: 74%;
     min-height: 360px;
     padding: 0.9rem;
+  }
+
+  .resume-page__preview-shell,
+  .resume-page__preview-frame {
+    min-height: 300px;
   }
 
   .resume-page--left,

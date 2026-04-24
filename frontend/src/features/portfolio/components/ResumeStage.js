@@ -1,6 +1,28 @@
 import React from 'react';
 
-const ResumePage = ({ className, title, lines }) => (
+const ResumePreview = ({ className, resumeAsset }) => (
+  <article className={`resume-page ${className}`}>
+    <div className="resume-page__preview-shell">
+      <iframe
+        className="resume-page__preview-frame"
+        src={resumeAsset.previewUrl}
+        title="Resume preview from Google Drive"
+        loading="lazy"
+        allow="autoplay"
+      />
+    </div>
+    <div className="resume-page__preview-actions">
+      <a href={resumeAsset.previewUrl} target="_blank" rel="noreferrer">
+        Open
+      </a>
+      <a href={resumeAsset.downloadUrl} target="_blank" rel="noreferrer">
+        Download
+      </a>
+    </div>
+  </article>
+);
+
+const ResumeTextPage = ({ className, title, lines }) => (
   <article className={`resume-page ${className}`}>
     <div className="resume-page__header">
       <span className="resume-page__name">Shadab Alam</span>
@@ -23,17 +45,21 @@ const ResumePage = ({ className, title, lines }) => (
   </article>
 );
 
-const ResumeStage = ({ cards }) => (
+const ResumeStage = ({ cards, resumeAsset }) => (
   <div className="hero-stage" id="resume-stage">
     <div className="stage-glow" />
     <div className="stage-rings" />
     {cards.map((card) => (
-      <ResumePage key={card.className} className={card.className} title={card.title} lines={card.lines} />
+      card.type === 'preview' ? (
+        <ResumePreview key={card.className} className={card.className} resumeAsset={resumeAsset} />
+      ) : (
+        <ResumeTextPage key={card.className} className={card.className} title={card.title} lines={card.lines} />
+      )
     ))}
 
     <div className="stage-control">
       <span className="stage-control__icon">↻</span>
-      <span>Drag to rotate</span>
+      <span>Live from Google Drive</span>
     </div>
     <div className="stage-arrows" aria-hidden="true">
       <span>‹</span>
