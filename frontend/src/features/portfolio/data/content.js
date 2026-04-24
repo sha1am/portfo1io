@@ -5,21 +5,23 @@ export const navigationItems = [
   { href: '#skills', label: 'Skills' },
   { href: '#projects', label: 'Projects' },
   { href: '#experience', label: 'Experience' },
+  { href: '#achievements', label: 'Achievements' },
   { href: '#contact', label: 'Contact' },
 ];
 
 export const socialLinks = [
   { href: 'https://github.com/sha1am', label: 'GitHub', icon: 'github' },
   { href: 'https://www.linkedin.com/in/sha1am/', label: 'LinkedIn', icon: 'linkedin' },
-  { href: 'mailto:shadab.connect@gmail.com', label: 'Email', icon: 'email' },
+  { href: 'mailto:shadab.connect17@gmail.com', label: 'Email', icon: 'email' },
+  { href: 'tel:+919958328345', label: 'Phone', icon: 'phone' },
 ];
 
 export const heroContent = {
   greeting: "Hello, I'm",
   name: 'Shadab Alam',
-  role: 'Software Development Engineer',
-  highlights: ['Backend Developer', 'Problem Solver', 'Tech Enthusiast'],
-  primaryActionLabel: 'View My Resume (3D)',
+  roles: ['Full-Stack Developer', 'Software Engineer', 'Backend Developer', 'Problem Solver'],
+  highlights: [],
+  primaryActionLabel: 'View My Resume',
   secondaryActionLabel: "Let's Build",
 };
 
@@ -27,92 +29,126 @@ export const resumeAsset = createGoogleDriveAsset('https://drive.google.com/file
 
 export const resumeCards = [
   {
-    className: 'resume-page--left',
-    title: 'Summary',
-    lines: [
-      'Backend-focused engineer with practical product sense.',
-      'Builds APIs, workflows, and systems for scale.',
-      'Strong bias for execution and clarity.',
-    ],
-  },
-  {
     className: 'resume-page--center',
     type: 'preview',
-  },
-  {
-    className: 'resume-page--right',
-    title: 'Highlights',
-    lines: [
-      'Production APIs and platform tooling.',
-      'Scalable backend and data-heavy systems.',
-      'Hands-on delivery across product and infra.',
-    ],
   },
 ];
 
 export const stats = [
-  { label: 'Experience', value: '2+ Years', icon: 'briefcase' },
-  { label: 'Projects', value: '3+ Completed', icon: 'code' },
-  { label: 'Problems Solved', value: '400+', icon: 'chart' },
-  { label: 'Users Impacted', value: '2M+', icon: 'users' },
+  { label: 'Experience', value: '3+ Years', icon: 'briefcase' },
+  { label: 'Problems Solved', value: '400+', icon: 'code' },
+  { label: 'Apps Served', value: '2M+', icon: 'chart' },
+  { label: 'Performance Gain', value: '30%', icon: 'users' },
 ];
 
 export const aboutSection = {
   eyebrow: 'About',
-  title: 'Building polished products from backend logic to user-facing flow.',
+  title: 'Software Engineer | Backend Development | Golang & Python & React | Data Structures & Algorithms',
   paragraphs: [
-    'This rebuild starts from a stronger foundation: a focused hero, better storytelling, clearer sections, and a deployment path that fits Vercel for the frontend and Render for the backend.',
-    'The design direction follows the reference closely without cloning it outright. It keeps the dark cinematic tone, floating document stage, blue glow system, and a more intentional visual hierarchy.',
+    'Results-driven Software Engineer with strong foundation in Data Structures and Algorithms, having solved 400+ quality problems. Skilled in designing robust, scalable backend systems using Python and Golang, with expertise in API design and performance optimization.',
+    'At Trademo, I build core backend services powering global trade compliance, focusing on accuracy and scalability. At Park+, I develop systems used by millions, prioritizing efficiency and reliability. Passionate about solving complex challenges and continuously learning in collaborative environments.',
+    'Open to connecting with fellow engineers and tech enthusiasts to build impactful products together!',
   ],
 };
 
 export const skillsSection = {
   eyebrow: 'Skills',
-  title: 'Core stack and delivery strengths.',
-  items: ['Go', 'Python', 'React', 'JavaScript', 'PostgreSQL', 'Docker', 'Redis', 'Kafka', 'AWS'],
+  title: 'Core technical skills and production experience.',
+  items: ['Go (Golang)', 'Python', 'C++', 'SQL', 'HTML5', 'CSS3', 'Django', 'Gin', 'Pandas', 'NumPy', 'Docker', 'Kubernetes', 'AWS', 'MySQL', 'PostgreSQL', 'MongoDB', 'GraphQL', 'Redis', 'Bash', 'Linux', 'Git', 'Postman'],
 };
 
 export const projectCards = [
   {
-    title: 'Resume-Driven Portfolio',
+    title: 'ByteVault: Full-stack File Management',
+    tag: 'Full-Stack Application',
+    summary: 'Secure file hosting platform with deduplication, advanced search & filtering, React hooks with query caching, and scalable REST APIs in Django.',
+    links: {
+      website: 'https://byte-vault-fort.vercel.app/',
+      github: 'https://github.com/sha1am/ByteVault'
+    }
+  },
+  {
+    title: 'GreenWave: Smart Traffic Router',
+    tag: 'Computer Vision Project',
+    summary: 'Live video streaming application for optimizing vehicle routing at traffic signals with scheduling algorithm to reduce waiting times and carbon footprint.',
+    links: {
+      website: 'https://drive.google.com/file/d/1Y80xR8pfJcM0fsc5lOouxO5SEdeLpYfV/view',
+      github: 'https://github.com/sha1am/MajorProject2023'
+    }
+  },
+  {
+    title: 'Interactive 3D Portfolio',
     tag: 'Frontend Experience',
-    summary: 'A cinematic portfolio homepage with a floating resume stage, social links, and strong first-impression storytelling.',
-  },
-  {
-    title: 'Data Platforms',
-    tag: 'Backend Systems',
-    summary: 'Scalable backend services for ingestion, document workflows, and operational tooling across production-grade systems.',
-  },
-  {
-    title: 'Applied ML Workflows',
-    tag: 'Intelligent Products',
-    summary: 'Prediction and automation pipelines that tie product decisions to measurable impact, throughput, and reliability.',
+    summary: 'Cinematic portfolio with 3D resume interactions, hover-to-expand functionality, and smooth animations built with React and modern CSS.',
   },
 ];
 
 export const experienceCards = [
   {
-    range: '2024 - Present',
-    role: 'Software Development Engineer',
-    company: 'Building backend-heavy products',
+    range: 'Nov 2025 - Present',
+    role: 'Software Engineer',
+    company: 'Trademo',
+    location: 'India · On-site',
     points: [
-      'Designed APIs and async workflows for data-rich applications.',
-      'Improved throughput and reliability on document and reporting pipelines.',
+      'Building scalable backend infrastructure powering global trade compliance workflows.',
+      'Implemented ACL-driven access control in User Management System (UMS), enabling secure, granular role and permission management across multiple Trademo products.',
+      'Designed, built, and optimized the Tradescreen Service — an LC document screening engine processing 8,000+ documents/day using hybrid rule-based and ML-assisted pipeline.',
+      'Achieved 2x throughput improvement and 20% reduction in false positives in document screening.',
+    ],
+    techStack: ['Python', 'Go', 'REST APIs', 'Microservices', 'Docker', 'AWS', 'PostgreSQL', 'MySQL', 'Kubernetes'],
+    backgroundImage: true, // Flag to use provided image as background
+  },
+  {
+    range: 'November 2024 - Present',
+    role: 'SDE-1 Backend',
+    company: 'Park+',
+    points: [
+      'Own and maintain 3 core backend services for official Park+ app, used by 2 crore+ car owners across India.',
+      'Manage Notification Service, built in Golang and Kafka, ensuring high-throughput delivery of app notifications via MoEngage.',
+      'Lead development and enhancement of Help & Support platform (CST), leveraging Python-based rule engine to streamline user support.',
+      'Designed and maintained Report Service in Python, utilizing Kafka for scalable, high-throughput report delivery across microservices.',
+      'Collaborate with cross-functional teams to design, launch, and optimize new features.',
     ],
   },
   {
-    range: '2023 - 2024',
-    role: 'Backend Developer',
-    company: 'Shipping APIs, automation, and analytics systems',
+    range: 'June 2023 - August 2024',
+    role: 'Python Developer',
+    company: 'Viveja IT Services',
     points: [
-      'Worked across Go, Python, SQL, and product-facing tooling.',
-      'Took features from implementation to deployment with practical ownership.',
+      'Built scalable account monitoring dashboard with Python/Django and integrated ML models into production using Docker and Airflow.',
+      'Improved system performance by 40% and reliability by 30% through optimization and architectural improvements.',
+      'Collaborated with cross-functional teams to integrate ML models into production systems ensuring scalability and efficiency.',
+      'Participated in code reviews and on-call rotations, contributing to high code quality and system uptime.',
     ],
   },
 ];
 
+export const achievementsSection = {
+  eyebrow: 'Achievements',
+  title: 'Academic excellence and professional recognition.',
+  items: [
+    {
+      title: 'Solved 400+ Algorithmic Problems',
+      description: 'Across competitive programming platforms including LeetCode, Codeforces, and StrataScratch'
+    },
+    {
+      title: '50% Tuition Merit Scholarship',
+      description: 'Received INR 5,00,000 during B.Tech for consistent academic excellence (2019–2023)'
+    },
+    {
+      title: 'CBSE Class XII Board Topper',
+      description: 'Achieved 93% aggregate; recognized for academic excellence (2018)'
+    },
+    {
+      title: 'CBSE Class X Board Topper',
+      description: 'Secured perfect 10 CGPA; awarded for academic distinction (2016)'
+    }
+  ]
+};
+
 export const contactCards = [
-  { label: 'Email', value: 'shadab.connect@gmail.com', href: 'mailto:shadab.connect@gmail.com' },
+  { label: 'Email', value: 'shadab.connect17@gmail.com', href: 'mailto:shadab.connect17@gmail.com' },
   { label: 'GitHub', value: 'github.com/sha1am', href: 'https://github.com/sha1am' },
   { label: 'LinkedIn', value: 'linkedin.com/in/sha1am', href: 'https://www.linkedin.com/in/sha1am/' },
+  { label: 'Phone', value: '+91-9958328345', href: 'tel:+919958328345' },
 ];

@@ -1,22 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
-
-const INITIAL_POSE = {
-  rotateX: -7,
-  rotateY: -14,
-  rotateZ: 1.2,
-  shiftX: 0,
-  shiftY: 0,
-  fold: 0,
-};
+import { RESUME } from '../../../shared/constants';
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
 const ResumePreview = ({ className, resumeAsset }) => {
-  const [pose, setPose] = useState(INITIAL_POSE);
+  const [pose, setPose] = useState(RESUME.POSE.INITIAL);
   const [isDragging, setIsDragging] = useState(false);
-  const [isFolding, setIsFolding] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const dragState = useRef(null);
   const resetTimer = useRef(null);
+  const expandTimer = useRef(null);
+
+  const clearExpandTimer = () => {
+    if (exportTimer.current) {
+      window.clearTimeout(expandTimer.current);
+      expandTimer.current = null;
+    }
+  };
 
   const clearResetTimer = () => {
     if (resetTimer.current) {
@@ -28,16 +28,14 @@ const ResumePreview = ({ className, resumeAsset }) => {
   const resetPose = () => {
     clearResetTimer();
     setIsDragging(false);
-    setIsFolding(false);
-    setPose(INITIAL_POSE);
+    setPose(RESUME.POSE.INITIAL);
   };
 
-  const scheduleReset = (delay = 650) => {
+  const scheduleReset = (delay = RESUME.RESET_DELAY) => {
     clearResetTimer();
     resetTimer.current = window.setTimeout(() => {
       setIsDragging(false);
-      setIsFolding(false);
-      setPose(INITIAL_POSE);
+      setPose(RESUME.POSE.INITIAL);
     }, delay);
   };
 
@@ -73,7 +71,6 @@ const ResumePreview = ({ className, resumeAsset }) => {
       rotateZ: clamp(dragState.current.startPose.rotateZ + dx / 120, -6, 6),
       shiftX: clamp(dx / 2.2, -38, 38),
       shiftY: clamp(dy / 3.5, -26, 26),
-      fold: clamp(Math.abs(dx) / 9, 0, 22),
     });
   };
 
@@ -87,33 +84,33 @@ const ResumePreview = ({ className, resumeAsset }) => {
     scheduleReset();
   };
 
-  const handleFold = () => {
-    clearResetTimer();
-    setIsDragging(false);
-    setIsFolding(true);
-    setPose({
-      rotateX: -4,
-      rotateY: -34,
-      rotateZ: 2.2,
-      shiftX: 14,
-      shiftY: -6,
-      fold: 55,
-    });
-    scheduleReset(1400);
+  const handleMouseEnter = () => {
+    clearExpandTimer();
+    setIsExpanded(true);
   };
 
-  useEffect(() => () => clearResetTimer(), []);
+  const handleMouseLeave = () => {
+    expandTimer.current = window.setTimeout(() => {
+      setIsExpanded(false);
+    }, 300);
+  };
+
+  useEffect(() => () => {
+    clearResetTimer();
+    clearExpandTimer();
+  }, []);
 
   return (
     <article
-      className={`resume-page ${className} resume-page--interactive${isDragging ? ' is-dragging' : ''}${isFolding ? ' is-folding' : ''}`}
+      className={`resume-page ${className} resume-page--interactive${isDragging ? ' is-dragging' : ''}${isExpanded ? ' is-expanded' : ''}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       style={{
         '--page-rotate-x': `${pose.rotateX}deg`,
         '--page-rotate-y': `${pose.rotateY}deg`,
         '--page-rotate-z': `${pose.rotateZ}deg`,
         '--page-shift-x': `${pose.shiftX}px`,
         '--page-shift-y': `${pose.shiftY}px`,
-        '--page-fold': `${pose.fold}deg`,
       }}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
@@ -123,19 +120,15 @@ const ResumePreview = ({ className, resumeAsset }) => {
       <div className="resume-page__sheet">
         <div className="resume-page__preview-shell">
           <iframe
-            className="resume-page__preview-frame"
+            className={`resume-page__preview-frame${isExpanded ? ' is-interactive' : ''}`}
             src={resumeAsset.firstPagePreviewUrl}
             title="Resume page 1 preview from Google Drive"
             loading="lazy"
             allow="autoplay"
           />
         </div>
-        <div className="resume-page__fold-pane" aria-hidden="true" />
       </div>
       <div className="resume-page__preview-actions">
-        <button type="button" onClick={handleFold}>
-          Fold
-        </button>
         <button type="button" onClick={resetPose}>
           Reset
         </button>

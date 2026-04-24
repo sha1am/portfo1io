@@ -1,27 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import portrait from '../../../assets/images/profile-picture.png';
 import ResumeStage from './ResumeStage';
 import SocialLinks from './SocialLinks';
 
-const HeroSection = ({ heroContent, socialLinks, resumeCards, resumeAsset }) => (
+const RoleRotator = ({ roles }) => {
+  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentRoleIndex((prevIndex) => (prevIndex + 1) % roles.length);
+    }, 3000); // Change role every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [roles.length]);
+
+  return (
+    <p className="hero-role">
+      {roles[currentRoleIndex]}
+    </p>
+  );
+};
+
+const HeroSection = ({ heroContent, socialLinks, resumeCards, resumeAsset, aboutSection }) => (
   <section className="hero-section">
     <SocialLinks links={socialLinks} />
 
     <div className="hero-copy">
       <div className="portrait-frame">
         <div className="portrait-aura" />
+        <div className="portrait-light" />
         <img src={portrait} alt="Portrait of Shadab Alam" className="hero-portrait" />
       </div>
 
       <p className="eyebrow">{heroContent.greeting}</p>
       <h1>{heroContent.name}</h1>
-      <p className="hero-role">{heroContent.role}</p>
+      <RoleRotator roles={heroContent.roles} />
       <div className="hero-divider" />
-      <p className="hero-summary">
-        {heroContent.highlights.map((highlight) => (
-          <span key={highlight}>{highlight}</span>
+      <div className="hero-summary">
+        {aboutSection.paragraphs.map((paragraph, index) => (
+          <p key={index}>{paragraph}</p>
         ))}
-      </p>
+      </div>
 
       <div className="hero-actions">
         <a className="primary-button" href={resumeAsset.viewUrl} target="_blank" rel="noreferrer">
