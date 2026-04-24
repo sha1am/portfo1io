@@ -7,23 +7,25 @@ type Response struct {
 	Status  string `json:"status,omitempty"`
 }
 
-type Service struct{}
+type Service struct {
+	serviceName string
+}
 
-func NewService() *Service {
-	return &Service{}
+func NewService(serviceName string) *Service {
+	return &Service{serviceName: serviceName}
 }
 
 func (s *Service) Status() Response {
 	return Response{
 		Message: "Backend server is running!",
-		Service: "portfolio-api",
+		Service: s.serviceName,
 		Runtime: "go",
 	}
 }
 
 func (s *Service) Health() Response {
 	return Response{
-		Service: "portfolio-api",
+		Service: s.serviceName,
 		Runtime: "go",
 		Status:  "ok",
 	}

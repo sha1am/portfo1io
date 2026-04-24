@@ -1,50 +1,172 @@
-# Portfolio
+# Shadab Alam Portfolio
 
-This repository contains:
+> Production-style engineering portfolio built as a deployable React frontend and Go backend, designed to communicate backend depth, product thinking, and measurable impact in under a minute.
 
-- **frontend/** – a React application inspired by [takeuforward profile](https://takeuforward.org/profile/sha1am).
-- **backend/** – a small Go HTTP API.
-- **Jenkinsfile** – example pipeline for building and deploying both parts.
+![React](https://img.shields.io/badge/Frontend-React%2018-0f172a?style=for-the-badge&logo=react)
+![Go](https://img.shields.io/badge/Backend-Go%201.26-0b1020?style=for-the-badge&logo=go)
+![Vercel Ready](https://img.shields.io/badge/Deploy-Vercel-111111?style=for-the-badge&logo=vercel)
+![Render Ready](https://img.shields.io/badge/Deploy-Render-1b1f23?style=for-the-badge&logo=render)
+![CI](https://img.shields.io/badge/CI-GitHub%20Actions-1f2937?style=for-the-badge&logo=githubactions)
 
-Only a React frontend and a Go backend are maintained. The frontend is intended for **Vercel** and the backend is intended for **Render**.
+## Why This Exists
 
-## Structure
+This repository is intentionally built like a small production system instead of a static personal site.
 
-```text
-frontend/src/
-  app/                    # App bootstrap and global styles
-  features/portfolio/     # Portfolio page, feature components, and content data
-  shared/                 # Shared UI primitives and API client helpers
+It is meant to show:
 
-backend/
-  cmd/api/                # Application entrypoint
-  internal/app/           # Runtime wiring and server startup
-  internal/config/        # Environment-driven configuration
-  internal/httpapi/       # HTTP router, middleware, and tests
-  internal/status/        # Status feature handlers and service logic
-  internal/web/           # Shared HTTP response helpers
-```
+- Strong backend-oriented engineering fundamentals
+- Clear separation of concerns across frontend and backend layers
+- Deployment readiness for real environments
+- Measurable delivery narrative around scale, performance, and reliability
 
-The repo is organized around clear boundaries:
+## What It Does
 
-- Frontend code is split into `app`, `features`, and `shared` so page-specific UI stays separate from reusable infrastructure.
-- Backend code is split into configuration, app wiring, transport, and feature packages so new APIs can be added without growing one file into a catch-all.
+- Presents a recruiter-friendly portfolio landing page with a themed experience, resume preview, project highlights, and impact-focused experience sections
+- Serves a lightweight Go API for health/status checks and future portfolio content expansion
+- Supports deployment with Vercel for the frontend and Render for the backend
 
-## Running locally
+## Tech Stack
 
 ### Frontend
-```bash
-cd frontend
-npm install
-npm start
-```
-This starts a development server at `http://localhost:3000`.
+
+- React 18
+- Webpack 5
+- Modern CSS with theme tokens
 
 ### Backend
+
+- Go
+- Standard library `net/http`
+- Structured logging with `log/slog`
+
+### Delivery
+
+- GitHub Actions CI
+- Vercel configuration
+- Render blueprint
+
+## Feature Highlights
+
+- Navy night theme and crimson day theme with a consistent tokenized color system
+- Interactive resume stage driven by React state and CSS transforms
+- Structured Go API with configuration, middleware, transport, feature, and response layers
+- Request ID propagation and structured request logging in the backend
+- Graceful shutdown and environment-driven runtime configuration
+- Deployment-ready repository layout with CI and platform-specific config
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A["Recruiter / Browser"] --> B["React Frontend (Vercel)"]
+    B --> C["Go API (Render)"]
+    C --> D["Status / Health Feature"]
+    B --> E["Google Drive Resume Preview"]
+```
+
+### Repository Layout
+
+```text
+frontend/
+  public/                  Static HTML, manifest, and metadata
+  src/app/                 Application bootstrap
+  src/features/portfolio/  Portfolio page, sections, and feature UI
+  src/shared/              Shared constants, API helpers, and utilities
+
+backend/
+  cmd/api/                 Application entrypoint
+  internal/app/            Server bootstrap and lifecycle management
+  internal/config/         Environment configuration
+  internal/httpapi/        Router, middleware, and transport tests
+  internal/status/         Status feature service and handlers
+  internal/web/            JSON response helpers
+
+.github/workflows/         Continuous integration
+render.yaml                Render deployment blueprint
+frontend/vercel.json       Vercel routing and headers
+```
+
+## Local Setup
+
+### Prerequisites
+
+- Node.js 20+
+- npm 10+
+- Go 1.26+
+
+### 1. Frontend
+
+```bash
+cd frontend
+cp .env.example .env
+npm ci
+npm start
+```
+
+Frontend runs at [http://localhost:3000](http://localhost:3000).
+
+### 2. Backend
+
 ```bash
 cd backend
+cp .env.example .env
 go run ./cmd/api
 ```
-The API will then be available at `http://localhost:8000/`.
 
-See `backend/README.md` for more backend information. Deployment instructions are available in `Depploy_readme.md`.
+Backend runs at [http://localhost:8000](http://localhost:8000).
+
+## Environment Variables
+
+### Frontend
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `REACT_APP_API_URL` | No | Base URL for the Go API. Defaults to `http://localhost:8000` |
+
+### Backend
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `SERVICE_NAME` | No | Service name used in responses and logs |
+| `APP_ENV` | No | Runtime environment label |
+| `PORT` | No | HTTP server port |
+| `CORS_ALLOW_ORIGIN` | No | Allowed frontend origin |
+| `READ_TIMEOUT` | No | HTTP read timeout |
+| `WRITE_TIMEOUT` | No | HTTP write timeout |
+| `IDLE_TIMEOUT` | No | HTTP idle timeout |
+| `SHUTDOWN_TIMEOUT` | No | Graceful shutdown timeout |
+
+## API Endpoints
+
+| Method | Route | Purpose |
+| --- | --- | --- |
+| `GET` | `/` | Portfolio API status payload |
+| `GET` | `/health` | Health check |
+| `GET` | `/api/status` | Explicit API status route |
+
+## Quality Checks
+
+```bash
+cd backend && go test ./... && go build ./...
+cd frontend && npm run build
+```
+
+CI runs the same validation on every push and pull request.
+
+## Deployment
+
+- Frontend: deploy `frontend/` to Vercel
+- Backend: deploy `backend/` to Render
+- Detailed instructions: [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+## Positioning Notes
+
+If you are reviewing this repository as a hiring manager, the strongest signals are:
+
+- impact-oriented experience framing instead of tool listing
+- backend service organization that can scale beyond a toy API
+- deployment and CI artifacts that make the project feel operational, not academic
+
+## License
+
+[MIT](./LICENSE)

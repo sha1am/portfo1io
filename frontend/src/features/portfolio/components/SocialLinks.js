@@ -17,6 +17,16 @@ const iconPaths = {
       strokeLinejoin="round"
     />
   ),
+  phone: (
+    <path
+      d="M7.2 3.5h2.6l1.1 3.2-1.5 1.2c.77 1.54 2.02 2.79 3.56 3.56l1.2-1.5 3.2 1.1v2.6c0 .8-.65 1.45-1.45 1.45C9.75 16.11 4.89 11.25 4.89 4.95c0-.8.65-1.45 1.45-1.45Z"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  ),
 };
 
 const SocialLinks = ({ links }) => (

@@ -19,10 +19,14 @@ export const socialLinks = [
 export const heroContent = {
   greeting: "Hello, I'm",
   name: 'Shadab Alam',
-  roles: ['Full-Stack Developer', 'Software Engineer', 'Backend Developer', 'Problem Solver'],
-  highlights: [],
-  primaryActionLabel: 'View My Resume',
-  secondaryActionLabel: "Let's Build",
+  roles: ['Backend Engineer', 'Go & Python Developer', 'Distributed Systems Builder', 'Product-Minded Engineer'],
+  summaryPoints: [
+    '3+ years building production backend systems in Go and Python.',
+    'Improved throughput 2x in document processing and reduced false positives by 20%.',
+    'Built services used by 2M+ users with a focus on reliability, scale, and developer velocity.',
+  ],
+  primaryActionLabel: 'View Resume',
+  secondaryActionLabel: 'Get In Touch',
 };
 
 export const resumeAsset = createGoogleDriveAsset('https://drive.google.com/file/d/18BKUMCl3JeyyVsl-oCXtR-06_udcEysw/view?usp=drivesdk');
@@ -37,17 +41,17 @@ export const resumeCards = [
 export const stats = [
   { label: 'Experience', value: '3+ Years', icon: 'briefcase' },
   { label: 'Problems Solved', value: '400+', icon: 'code' },
-  { label: 'Apps Served', value: '2M+', icon: 'chart' },
-  { label: 'Performance Gain', value: '30%', icon: 'users' },
+  { label: 'Users Reached', value: '2M+', icon: 'users' },
+  { label: 'Throughput Gain', value: '2x', icon: 'chart' },
 ];
 
 export const aboutSection = {
   eyebrow: 'About',
-  title: 'Software Engineer | Backend Development | Golang & Python & React | Data Structures & Algorithms',
+  title: 'Backend-focused software engineer with product sense, systems depth, and measurable delivery.',
   paragraphs: [
-    'Results-driven Software Engineer with strong foundation in Data Structures and Algorithms, having solved 400+ quality problems. Skilled in designing robust, scalable backend systems using Python and Golang, with expertise in API design and performance optimization.',
-    'At Trademo, I build core backend services powering global trade compliance, focusing on accuracy and scalability. At Park+, I develop systems used by millions, prioritizing efficiency and reliability. Passionate about solving complex challenges and continuously learning in collaborative environments.',
-    'Open to connecting with fellow engineers and tech enthusiasts to build impactful products together!',
+    'I build backend systems that have to stay correct under pressure: compliance workflows, event-driven services, reporting pipelines, and internal platforms that teams rely on every day.',
+    'My strongest work sits at the intersection of application engineering and data-heavy problem solving. I care about throughput, correctness, operability, and whether the system is still easy for the next engineer to extend.',
+    'This portfolio is structured as a deployable product rather than a static gallery so reviewers can evaluate both implementation quality and engineering decisions.',
   ],
 };
 
@@ -96,30 +100,32 @@ export const experienceCards = [
       'Achieved 2x throughput improvement and 20% reduction in false positives in document screening.',
     ],
     techStack: ['Python', 'Go', 'REST APIs', 'Microservices', 'Docker', 'AWS', 'PostgreSQL', 'MySQL', 'Kubernetes'],
-    backgroundImage: true, // Flag to use provided image as background
   },
   {
     range: 'November 2024 - Present',
     role: 'SDE-1 Backend',
     company: 'Park+',
+    location: 'India · On-site',
     points: [
-      'Own and maintain 3 core backend services for official Park+ app, used by 2 crore+ car owners across India.',
-      'Manage Notification Service, built in Golang and Kafka, ensuring high-throughput delivery of app notifications via MoEngage.',
-      'Lead development and enhancement of Help & Support platform (CST), leveraging Python-based rule engine to streamline user support.',
-      'Designed and maintained Report Service in Python, utilizing Kafka for scalable, high-throughput report delivery across microservices.',
-      'Collaborate with cross-functional teams to design, launch, and optimize new features.',
+      'Owned and maintained 3 core backend services for the Park+ app serving 2 crore+ car owners across India.',
+      'Managed a Golang and Kafka notification service for high-throughput customer engagement delivery.',
+      'Led development of the Help & Support platform with a Python rule engine to streamline support operations.',
+      'Designed and maintained a report delivery service in Python and Kafka for scalable inter-service reporting workflows.',
     ],
+    techStack: ['Go', 'Python', 'Kafka', 'Microservices', 'AWS'],
   },
   {
     range: 'June 2023 - August 2024',
     role: 'Python Developer',
     company: 'Viveja IT Services',
+    location: 'India',
     points: [
       'Built scalable account monitoring dashboard with Python/Django and integrated ML models into production using Docker and Airflow.',
       'Improved system performance by 40% and reliability by 30% through optimization and architectural improvements.',
-      'Collaborated with cross-functional teams to integrate ML models into production systems ensuring scalability and efficiency.',
-      'Participated in code reviews and on-call rotations, contributing to high code quality and system uptime.',
+      'Integrated ML models into production systems with Dockerized delivery and Airflow-based orchestration.',
+      'Contributed through code reviews and operational support to improve system uptime and delivery quality.',
     ],
+    techStack: ['Python', 'Django', 'Docker', 'Airflow', 'SQL'],
   },
 ];
 

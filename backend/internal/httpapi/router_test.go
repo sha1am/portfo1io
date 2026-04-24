@@ -2,7 +2,7 @@ package httpapi
 
 import (
 	"io"
-	"log"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -17,8 +17,8 @@ func TestRouterEndpoints(t *testing.T) {
 
 	router := NewRouter(
 		config.Config{AllowedOrigin: "*"},
-		log.New(io.Discard, "", 0),
-		status.NewService(),
+		slog.New(slog.NewJSONHandler(io.Discard, nil)),
+		status.NewService("portfolio-api"),
 	)
 
 	tests := []struct {
@@ -93,6 +93,10 @@ func TestRouterEndpoints(t *testing.T) {
 
 			if recorder.Header().Get("Access-Control-Allow-Origin") != "*" {
 				t.Fatalf("expected CORS header to be set")
+			}
+
+			if recorder.Header().Get("X-Request-ID") == "" {
+				t.Fatalf("expected request id header to be set")
 			}
 		})
 	}

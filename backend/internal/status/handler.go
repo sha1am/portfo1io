@@ -16,12 +16,12 @@ func NewHandler(service *Service) *Handler {
 
 func (h *Handler) Root(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
-		web.WriteJSON(w, http.StatusNotFound, map[string]string{"error": "route not found"})
+		web.WriteError(w, http.StatusNotFound, "route not found")
 		return
 	}
 
 	if r.Method != http.MethodGet {
-		web.WriteJSON(w, http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
+		web.WriteError(w, http.StatusMethodNotAllowed, "method not allowed")
 		return
 	}
 
@@ -30,7 +30,7 @@ func (h *Handler) Root(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) Health(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		web.WriteJSON(w, http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
+		web.WriteError(w, http.StatusMethodNotAllowed, "method not allowed")
 		return
 	}
 
@@ -39,7 +39,7 @@ func (h *Handler) Health(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) Status(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		web.WriteJSON(w, http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
+		web.WriteError(w, http.StatusMethodNotAllowed, "method not allowed")
 		return
 	}
 

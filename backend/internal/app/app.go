@@ -1,10 +1,14 @@
 package app
 
 import (
+	"context"
+	"errors"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"portfo1io/backend/internal/config"
 	"portfo1io/backend/internal/httpapi"
@@ -13,8 +17,8 @@ import (
 
 func Run() error {
 	cfg := config.Load()
-	logger := log.New(os.Stdout, "", log.LstdFlags)
-	statusService := status.NewService()
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
+	statusService := status.NewService(cfg.ServiceName)
 
 	server := &http.Server{
 		Addr:         cfg.Address(),
@@ -24,11 +28,41 @@ func Run() error {
 		IdleTimeout:  cfg.IdleTimeout,
 	}
 
-	logger.Printf("starting Go API on http://localhost:%s", cfg.Port)
+	logger.Info("starting API server",
+		"service", cfg.ServiceName,
+		"environment", cfg.AppEnv,
+		"address", server.Addr,
+		"allowed_origin", cfg.AllowedOrigin,
+	)
 
-	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		return fmt.Errorf("listen and serve: %w", err)
+	serverErrors := make(chan error, 1)
+	go func() {
+		serverErrors <- server.ListenAndServe()
+	}()
+
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	select {
+	case err := <-serverErrors:
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
+			return fmt.Errorf("listen and serve: %w", err)
+		}
+	case <-ctx.Done():
+		logger.Info("shutdown signal received")
+
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), cfg.ShutdownTimeout)
+		defer cancel()
+
+		if err := server.Shutdown(shutdownCtx); err != nil {
+			return fmt.Errorf("shutdown server: %w", err)
+		}
+
+		if err := <-serverErrors; err != nil && !errors.Is(err, http.ErrServerClosed) {
+			return fmt.Errorf("await server shutdown: %w", err)
+		}
 	}
 
+	logger.Info("API server stopped")
 	return nil
 }

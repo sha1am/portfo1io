@@ -84,6 +84,10 @@
   --button-orb-edge: #7497ff;
   --ghost-bg: rgba(141, 175, 255, 0.08);
   --ghost-hover-bg: rgba(141, 175, 255, 0.16);
+  --status-bg: rgba(141, 175, 255, 0.08);
+  --status-dot-online: #7de2a8;
+  --status-dot-loading: #d4e0ff;
+  --status-dot-offline: #f48a8a;
   --stage-glow:
     radial-gradient(circle, rgba(105, 140, 255, 0.95) 0%, rgba(74, 109, 223, 0.42) 36%, rgba(14, 28, 62, 0.06) 72%, transparent 74%);
   --stage-ring-border: rgba(141, 175, 255, 0.28);
@@ -185,6 +189,10 @@
   --button-orb-edge: #ee4540;
   --ghost-bg: rgba(199, 44, 65, 0.05);
   --ghost-hover-bg: rgba(199, 44, 65, 0.12);
+  --status-bg: rgba(199, 44, 65, 0.06);
+  --status-dot-online: #0d8a58;
+  --status-dot-loading: #c72c41;
+  --status-dot-offline: #9b1c1c;
   --stage-glow:
     radial-gradient(circle, rgba(238, 69, 64, 0.72) 0%, rgba(199, 44, 65, 0.22) 38%, rgba(128, 19, 54, 0.02) 72%, transparent 74%);
   --stage-ring-border: rgba(199, 44, 65, 0.22);
@@ -628,6 +636,42 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+}
+
+.hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0 1.2rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--status-bg);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.hero-status__dot {
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 999px;
+}
+
+.hero-status__dot--online {
+  background: var(--status-dot-online);
+  box-shadow: 0 0 0 6px rgba(125, 226, 168, 0.12);
+}
+
+.hero-status__dot--loading {
+  background: var(--status-dot-loading);
+  box-shadow: 0 0 0 6px rgba(212, 224, 255, 0.12);
+}
+
+.hero-status__dot--offline {
+  background: var(--status-dot-offline);
+  box-shadow: 0 0 0 6px rgba(244, 138, 138, 0.12);
 }
 
 .primary-button,
@@ -1662,6 +1706,11 @@
     gap: 1.2rem;
   }
 
+  .hero-status {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .primary-button,
   .ghost-button {
     min-height: 3.6rem;
@@ -1742,6 +1791,10 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+  }
+
+  .hero-status {
+    justify-content: center;
   }
 
   .primary-button,

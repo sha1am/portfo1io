@@ -14,6 +14,7 @@ import {
   stats,
 } from './data/content';
 import { EXPERIENCE } from '../../shared/constants';
+import { get } from '../../shared/api/client';
 import HeroSection from './components/HeroSection';
 import SectionPanel from './components/SectionPanel';
 import SiteHeader from './components/SiteHeader';
@@ -73,6 +74,41 @@ const ExperienceDeck = ({ experiences }) => {
 };
 
 const PortfolioPage = () => {
+  const [apiStatus, setApiStatus] = useState({
+    state: 'loading',
+    label: 'Checking API',
+  });
+
+  useEffect(() => {
+    let isActive = true;
+
+    get('/api/status')
+      .then((response) => {
+        if (!isActive) {
+          return;
+        }
+
+        setApiStatus({
+          state: 'online',
+          label: `${response.service} online`,
+        });
+      })
+      .catch(() => {
+        if (!isActive) {
+          return;
+        }
+
+        setApiStatus({
+          state: 'offline',
+          label: 'API unavailable',
+        });
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
   return (
     <div className="app-shell">
       <div className="app-background" />
@@ -84,7 +120,7 @@ const PortfolioPage = () => {
           socialLinks={socialLinks}
           resumeCards={resumeCards}
           resumeAsset={resumeAsset}
-          aboutSection={aboutSection}
+          apiStatus={apiStatus}
         />
 
         <div className="scroll-cue">Scroll Down</div>

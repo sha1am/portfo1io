@@ -21,7 +21,7 @@ const RoleRotator = ({ roles }) => {
   );
 };
 
-const HeroSection = ({ heroContent, socialLinks, resumeCards, resumeAsset, aboutSection }) => (
+const HeroSection = ({ heroContent, socialLinks, resumeCards, resumeAsset, apiStatus }) => (
   <section className="hero-section">
     <SocialLinks links={socialLinks} />
 
@@ -37,9 +37,13 @@ const HeroSection = ({ heroContent, socialLinks, resumeCards, resumeAsset, about
       <RoleRotator roles={heroContent.roles} />
       <div className="hero-divider" />
       <div className="hero-summary">
-        {aboutSection.paragraphs.map((paragraph, index) => (
-          <p key={index}>{paragraph}</p>
+        {heroContent.summaryPoints.map((point) => (
+          <span key={point}>{point}</span>
         ))}
+      </div>
+      <div className="hero-status" aria-live="polite">
+        <span className={`hero-status__dot hero-status__dot--${apiStatus.state}`} aria-hidden="true" />
+        <span>{apiStatus.label}</span>
       </div>
 
       <div className="hero-actions">

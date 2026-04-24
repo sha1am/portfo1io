@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: portfolio-api
+    runtime: go
+    rootDir: backend
+    buildCommand: go build -o api ./cmd/api
+    startCommand: ./api
+    envVars:
+      - key: SERVICE_NAME
+        value: portfolio-api
+      - key: APP_ENV
+        value: production
+      - key: CORS_ALLOW_ORIGIN
+        sync: false
+      - key: READ_TIMEOUT
+        value: 5s
+      - key: WRITE_TIMEOUT
+        value: 10s
+      - key: IDLE_TIMEOUT
+        value: 30s
+      - key: SHUTDOWN_TIMEOUT
+        value: 10s

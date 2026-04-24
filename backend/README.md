@@ -1,35 +1,42 @@
-# Go Backend
+# Backend
 
-This backend is a small Go HTTP API intended for local development and Render deployment.
+Small Go HTTP API for the portfolio application.
 
-## Structure
+## Responsibilities
+
+- health and status endpoints
+- environment-driven runtime configuration
+- structured request logging
+- request ID propagation
+- graceful shutdown
+
+## Package Layout
 
 ```text
-cmd/api/            # main package
-internal/app/       # bootstraps config, logging, and http.Server
-internal/config/    # environment configuration
-internal/httpapi/   # router, middleware, and transport tests
-internal/status/    # status feature handlers and service
-internal/web/       # shared response helpers
+cmd/api/            Entry point
+internal/app/       Server lifecycle and startup
+internal/config/    Environment configuration
+internal/httpapi/   Router, middleware, and transport tests
+internal/status/    Feature handler and service
+internal/web/       Shared JSON response helpers
 ```
 
-This keeps feature logic separate from HTTP transport and startup concerns, which makes it easier to add more endpoints later.
-
-## Development
+## Run Locally
 
 ```bash
+cp .env.example .env
 go run ./cmd/api
 ```
 
-The API defaults to `http://localhost:8000/`.
-
 ## Endpoints
 
-- `GET /` returns a status message.
-- `GET /health` returns a health check response.
-- `GET /api/status` returns the same status payload as the root endpoint.
+- `GET /`
+- `GET /health`
+- `GET /api/status`
 
-## Configuration
+## Validation
 
-- `PORT` sets the server port. Default: `8000`
-- `CORS_ALLOW_ORIGIN` sets the allowed origin for CORS. Default: `*`
+```bash
+go test ./...
+go build ./...
+```
