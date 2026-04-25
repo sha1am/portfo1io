@@ -1,0 +1,32 @@
+export const THEME = {
+  DARK: 'dark',
+  LIGHT: 'light',
+  DEFAULT: 'dark',
+};
+
+export const RESUME = {
+  POSE: {
+    INITIAL: {
+      rotateX: -7,
+      rotateY: -14,
+      rotateZ: 1.2,
+      shiftX: 0,
+      shiftY: 0,
+    },
+    RESET_DELAY: 500,
+  },
+};
+
+export const STORAGE = {
+  KEYS: {
+    THEME: 'portfolio-theme',
+  },
+};
+
+export const A11Y = {
+  LABELS: {
+    GO_TO_TOP: 'Go to top',
+    PRIMARY_NAV: 'Primary navigation',
+    SWITCH_TO_THEME: 'Switch to {theme} theme',
+  },
+};
