@@ -3,6 +3,7 @@ import { THEME, STORAGE, A11Y } from '../../../shared/constants';
 
 const SiteHeader = ({ navigationItems }) => {
   const [theme, setTheme] = useState(THEME.DEFAULT);
+  const nextTheme = theme === THEME.DARK ? THEME.LIGHT : THEME.DARK;
 
   useEffect(() => {
     const savedTheme = localStorage.getItem(STORAGE.KEYS.THEME) || THEME.DEFAULT;
@@ -11,10 +12,9 @@ const SiteHeader = ({ navigationItems }) => {
   }, []);
 
   const toggleTheme = () => {
-    const newTheme = theme === THEME.DARK ? THEME.LIGHT : THEME.DARK;
-    setTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem(STORAGE.KEYS.THEME, newTheme);
+    setTheme(nextTheme);
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    localStorage.setItem(STORAGE.KEYS.THEME, nextTheme);
   };
 
   return (
@@ -36,9 +36,9 @@ const SiteHeader = ({ navigationItems }) => {
         className="theme-chip" 
         type="button" 
         onClick={toggleTheme}
-        aria-label={A11Y.LABELS.SWITCH_TO_THEME.replace('{theme}', theme === THEME.DARK ? THEME.LIGHT : THEME.DARK)}
+        aria-label={A11Y.LABELS.SWITCH_TO_THEME.replace('{theme}', nextTheme)}
       >
-        <span className={`theme-chip__icon ${theme === THEME.DARK ? 'theme-chip__moon' : 'theme-chip__sun'}`} />
+        <span className={`theme-chip__icon ${nextTheme === THEME.LIGHT ? 'theme-chip__sun' : 'theme-chip__moon'}`} />
       </button>
     </header>
   );
