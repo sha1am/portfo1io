@@ -1,5 +1,5 @@
-import resumePdf from '../../../assets/images/Shadab_Alam_Resume.pdf';
 import resumePreview from '../../../assets/images/resume-preview.jpg';
+import { createGoogleDriveAsset } from '../../../shared/utils/googleDrive';
 
 export const navigationItems = [
   { href: '#about', label: 'About' },
@@ -30,13 +30,8 @@ export const heroContent = {
   secondaryActionLabel: 'Get In Touch',
 };
 
-export const resumeAsset = {
-  fileId: 'shadab-resume',
-  viewUrl: resumePdf,
-  previewUrl: resumePdf,
-  firstPagePreviewUrl: resumePreview,
-  downloadUrl: resumePdf,
-};
+export const resumeAsset = createGoogleDriveAsset('https://drive.google.com/file/d/18BKUMCl3JeyyVsl-oCXtR-06_udcEysw/view?usp=drivesdk');
+resumeAsset.firstPagePreviewUrl = resumePreview;
 
 export const resumeCards = [
   {
