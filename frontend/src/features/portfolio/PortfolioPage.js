@@ -2,6 +2,7 @@ import React from 'react';
 import {
   aboutSection,
   achievementsSection,
+  codingProfiles,
   contactCards,
   experienceCards,
   heroContent,
@@ -30,6 +31,7 @@ const PortfolioPage = () => (
         socialLinks={socialLinks}
         resumeCards={resumeCards}
         resumeAsset={resumeAsset}
+        codingProfiles={codingProfiles}
       />
 
       <div className="scroll-cue">Scroll Down</div>

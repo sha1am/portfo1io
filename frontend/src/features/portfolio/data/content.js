@@ -1,4 +1,5 @@
-import { createGoogleDriveAsset } from '../../../shared/utils/googleDrive';
+import resumePdf from '../../../assets/images/Shadab_Alam_Resume.pdf';
+import resumePreview from '../../../assets/images/resume-preview.jpg';
 
 export const navigationItems = [
   { href: '#about', label: 'About' },
@@ -17,8 +18,8 @@ export const socialLinks = [
 ];
 
 export const heroContent = {
-  greeting: "Hello, I'm",
-  name: 'Shadab Alam',
+  greeting: "Hello I'm",
+  name: 'SHADAB ALAM',
   roles: ['Backend Engineer', 'Go & Python Developer', 'Distributed Systems Builder', 'Product-Minded Engineer'],
   summaryPoints: [
     '3+ years building production backend systems in Go and Python.',
@@ -29,13 +30,46 @@ export const heroContent = {
   secondaryActionLabel: 'Get In Touch',
 };
 
-export const resumeAsset = createGoogleDriveAsset('https://drive.google.com/file/d/18BKUMCl3JeyyVsl-oCXtR-06_udcEysw/view?usp=drivesdk');
+export const resumeAsset = {
+  fileId: 'shadab-resume',
+  viewUrl: resumePdf,
+  previewUrl: resumePdf,
+  firstPagePreviewUrl: resumePreview,
+  downloadUrl: resumePdf,
+};
 
 export const resumeCards = [
   {
     className: 'resume-page--center',
     type: 'preview',
   },
+];
+
+export const codingProfiles = [
+  {
+    name: 'LeetCode',
+    url: 'https://leetcode.com/u/sha1am/',
+    problemsSolved: 182,
+    totalProblems: 3000,
+    color: '#ffa116',
+    logoType: 'leetcode'
+  },
+  {
+    name: 'CodeForces',
+    url: 'https://codeforces.com/profile/shalam',
+    problemsSolved: 153,
+    totalProblems: 1000,
+    color: '#29b6f6',
+    logoType: 'codeforces'
+  },
+  {
+    name: 'Stratascratch',
+    url: 'https://platform.stratascratch.com/user/sha1am',
+    problemsSolved: 25,
+    totalProblems: 500,
+    color: '#66bb6a',
+    logoType: 'stratascratch'
+  }
 ];
 
 export const stats = [

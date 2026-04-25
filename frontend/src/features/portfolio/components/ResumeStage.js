@@ -6,17 +6,8 @@ const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 const ResumePreview = ({ className, resumeAsset }) => {
   const [pose, setPose] = useState(RESUME.POSE.INITIAL);
   const [isDragging, setIsDragging] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const dragState = useRef(null);
   const resetTimer = useRef(null);
-  const expandTimer = useRef(null);
-
-  const clearExpandTimer = () => {
-    if (expandTimer.current) {
-      window.clearTimeout(expandTimer.current);
-      expandTimer.current = null;
-    }
-  };
 
   const clearResetTimer = () => {
     if (resetTimer.current) {
@@ -74,27 +65,13 @@ const ResumePreview = ({ className, resumeAsset }) => {
     scheduleReset();
   };
 
-  const handleMouseEnter = () => {
-    clearExpandTimer();
-    setIsExpanded(true);
-  };
-
-  const handleMouseLeave = () => {
-    expandTimer.current = window.setTimeout(() => {
-      setIsExpanded(false);
-    }, 300);
-  };
-
   useEffect(() => () => {
     clearResetTimer();
-    clearExpandTimer();
   }, []);
 
   return (
     <article
-      className={`resume-page ${className} resume-page--interactive${isDragging ? ' is-dragging' : ''}${isExpanded ? ' is-expanded' : ''}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      className={`resume-page ${className} resume-page--interactive${isDragging ? ' is-dragging' : ''}`}
       style={{
         '--page-rotate-x': `${pose.rotateX}deg`,
         '--page-rotate-y': `${pose.rotateY}deg`,
@@ -109,12 +86,11 @@ const ResumePreview = ({ className, resumeAsset }) => {
     >
       <div className="resume-page__sheet">
         <div className="resume-page__preview-shell">
-          <iframe
-            className={`resume-page__preview-frame${isExpanded ? ' is-interactive' : ''}`}
+          <img
+            className="resume-page__preview-image"
             src={resumeAsset.firstPagePreviewUrl}
-            title="Resume page 1 preview from Google Drive"
+            alt="Resume page 1 preview"
             loading="lazy"
-            allow="autoplay"
           />
         </div>
       </div>
@@ -147,23 +123,54 @@ const ResumeTextPage = ({ className, title, lines }) => (
 
 const ResumeStage = ({ cards, resumeAsset }) => (
   <div className="hero-stage" id="resume-stage">
-    <div className="stage-glow" />
-    <div className="stage-rings" />
-    {cards.map((card) => (
-      card.type === 'preview' ? (
-        <ResumePreview key={card.className} className={card.className} resumeAsset={resumeAsset} />
-      ) : (
-        <ResumeTextPage key={card.className} className={card.className} title={card.title} lines={card.lines} />
-      )
-    ))}
+    <div className="stage-content">
+      <div className="stage-podium" aria-hidden="true">
+        <div className="stage-glow" />
+        <div className="stage-rings" />
+      </div>
 
-    <div className="stage-control">
-      <span className="stage-control__icon">↻</span>
-      <span>Drag to inspect</span>
+      <div className="resume-container">
+        {cards.map((card) => (
+          card.type === 'preview' ? (
+            <ResumePreview key={card.className} className={card.className} resumeAsset={resumeAsset} />
+          ) : (
+            <ResumeTextPage key={card.className} className={card.className} title={card.title} lines={card.lines} />
+          )
+        ))}
+      </div>
     </div>
-    <div className="stage-arrows" aria-hidden="true">
-      <span>‹</span>
-      <span>›</span>
+
+    <div className="stage-dock">
+      <div className="stage-actions">
+        <a className="primary-button" href={resumeAsset.viewUrl} target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-11A.5.5 0 0 1 6 20V4a.5.5 0 0 1 .5-.5h.5Zm7 1.5v3h3"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path d="M9 12h6M9 15h6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          </svg>
+          View Resume
+        </a>
+        <a className="ghost-button" href="#contact">
+          Get In Touch
+        </a>
+      </div>
+
+      <div className="stage-controls">
+        <div className="stage-control">
+          <span className="stage-control__icon">↻</span>
+          <span>Drag to inspect</span>
+        </div>
+        <div className="stage-arrows" aria-hidden="true">
+          <span>‹</span>
+          <span>›</span>
+        </div>
+      </div>
     </div>
   </div>
 );

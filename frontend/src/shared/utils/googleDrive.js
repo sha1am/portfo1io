@@ -17,7 +17,7 @@ export const createGoogleDriveAsset = (urlOrId) => {
     fileId,
     viewUrl: `https://drive.google.com/file/d/${fileId}/view`,
     previewUrl: previewBaseUrl,
-    firstPagePreviewUrl: `${previewBaseUrl}#page=1`,
+    firstPagePreviewUrl: `https://drive.google.com/file/d/${fileId}/preview`,
     downloadUrl: `https://drive.google.com/uc?export=download&id=${fileId}`,
   };
 };

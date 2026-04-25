@@ -17,7 +17,7 @@ module.exports = {
         use: 'babel-loader',
       },
       {
-        test: /\.(png|jpe?g|gif|svg|webp)$/i,
+        test: /\.(png|jpe?g|gif|svg|webp|pdf)$/i,
         type: 'asset/resource',
       },
       {
