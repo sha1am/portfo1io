@@ -57,10 +57,19 @@
   --brand-flare: rgba(54, 125, 138, 0.2);
   --brand-hover-glow: rgba(54, 125, 138, 0.36);
   --scene-background:
-    radial-gradient(circle at 18% 18%, rgba(54, 125, 138, 0.28), transparent 22%),
-    radial-gradient(circle at 78% 22%, rgba(40, 95, 107, 0.26), transparent 18%),
-    radial-gradient(circle at 55% 72%, rgba(19, 51, 54, 0.48), transparent 24%),
+    radial-gradient(ellipse at 28% 16%, rgba(54, 125, 138, 0.34), transparent 24%),
+    radial-gradient(ellipse at 76% 18%, rgba(40, 95, 107, 0.3), transparent 22%),
+    radial-gradient(ellipse at 56% 72%, rgba(19, 51, 54, 0.58), transparent 28%),
     linear-gradient(180deg, #010001 0%, #010001 36%, #133336 100%);
+  --scene-veil:
+    radial-gradient(ellipse at 50% -12%, rgba(255, 255, 255, 0.12), transparent 34%),
+    radial-gradient(ellipse at 22% 44%, rgba(54, 125, 138, 0.22), transparent 32%),
+    radial-gradient(ellipse at 84% 52%, rgba(40, 95, 107, 0.22), transparent 34%);
+  --scene-texture:
+    linear-gradient(115deg, transparent 0 41%, rgba(255, 255, 255, 0.035) 42% 43%, transparent 44% 100%),
+    linear-gradient(65deg, transparent 0 46%, rgba(54, 125, 138, 0.055) 47% 48%, transparent 49% 100%);
+  --scene-veil-opacity: 0.9;
+  --scene-texture-opacity: 0.58;
   --dust-color: rgba(255, 255, 255, 0.46);
   --social-bg: rgba(1, 0, 1, 0.8);
   --social-text: rgba(255, 255, 255, 0.88);
@@ -133,70 +142,79 @@
 [data-theme="light"] {
   color-scheme: light;
   --text-strong: #2d142c;
-  --text: #43213f;
-  --muted: #7a505f;
+  --text: #44203b;
+  --muted: rgba(81, 10, 50, 0.68);
   --accent: #c72c41;
   --accent-light: #ee4540;
   --accent-dark: #801336;
-  --focus-ring: rgba(199, 44, 65, 0.78);
-  --line: rgba(128, 19, 54, 0.16);
-  --line-strong: rgba(199, 44, 65, 0.34);
-  --shadow: 0 28px 70px rgba(81, 10, 50, 0.14);
-  --shadow-soft: 0 16px 42px rgba(81, 10, 50, 0.08);
-  --bg-primary: #fff7f5;
-  --bg-secondary: #ffe4de;
-  --bg-tertiary: #f6d3d7;
-  --card-bg: rgba(255, 248, 246, 0.82);
-  --card-bg-soft: rgba(255, 255, 255, 0.38);
-  --card-bg-hover: rgba(238, 69, 64, 0.1);
-  --surface-glass: rgba(255, 248, 246, 0.84);
-  --surface-strong: rgba(255, 239, 235, 0.94);
-  --hover-bg: rgba(238, 69, 64, 0.06);
-  --header-bg: linear-gradient(180deg, rgba(255, 247, 245, 0.94), rgba(255, 228, 222, 0.78));
-  --brand-border: rgba(199, 44, 65, 0.38);
-  --brand-inner-line: rgba(199, 44, 65, 0.08);
-  --brand-flare: rgba(238, 69, 64, 0.12);
-  --brand-hover-glow: rgba(199, 44, 65, 0.22);
+  --focus-ring: rgba(238, 69, 64, 0.78);
+  --line: rgba(128, 19, 54, 0.2);
+  --line-strong: rgba(199, 44, 65, 0.42);
+  --shadow: 0 28px 70px rgba(45, 20, 44, 0.18);
+  --shadow-soft: 0 16px 42px rgba(81, 10, 50, 0.12);
+  --bg-primary: #fff2ed;
+  --bg-secondary: #fbd0c8;
+  --bg-tertiary: #c72c41;
+  --card-bg: rgba(255, 246, 241, 0.86);
+  --card-bg-soft: rgba(255, 250, 246, 0.58);
+  --card-bg-hover: rgba(238, 69, 64, 0.13);
+  --surface-glass: rgba(255, 246, 241, 0.82);
+  --surface-strong: rgba(255, 238, 231, 0.94);
+  --hover-bg: rgba(238, 69, 64, 0.08);
+  --header-bg: linear-gradient(180deg, rgba(255, 246, 241, 0.92), rgba(251, 208, 200, 0.72));
+  --brand-border: rgba(199, 44, 65, 0.44);
+  --brand-inner-line: rgba(238, 69, 64, 0.12);
+  --brand-flare: rgba(238, 69, 64, 0.16);
+  --brand-hover-glow: rgba(199, 44, 65, 0.28);
   --scene-background:
-    radial-gradient(circle at 22% 14%, rgba(238, 69, 64, 0.22), transparent 20%),
-    radial-gradient(circle at 78% 16%, rgba(199, 44, 65, 0.14), transparent 18%),
-    radial-gradient(circle at 56% 72%, rgba(128, 19, 54, 0.12), transparent 25%),
-    linear-gradient(180deg, #fff9f7 0%, #fff0eb 38%, #f6d7da 100%);
-  --dust-color: rgba(199, 44, 65, 0.28);
-  --social-bg: rgba(255, 248, 246, 0.9);
+    radial-gradient(ellipse at 20% 12%, rgba(238, 69, 64, 0.42), transparent 22%),
+    radial-gradient(ellipse at 78% 16%, rgba(199, 44, 65, 0.25), transparent 20%),
+    radial-gradient(ellipse at 58% 78%, rgba(81, 10, 50, 0.18), transparent 32%),
+    linear-gradient(180deg, #fff5f0 0%, #ffe3d9 35%, #c72c41 76%, #2d142c 100%);
+  --scene-veil:
+    radial-gradient(ellipse at 48% -10%, rgba(255, 255, 255, 0.78), transparent 32%),
+    radial-gradient(ellipse at 22% 42%, rgba(238, 69, 64, 0.2), transparent 34%),
+    radial-gradient(ellipse at 85% 58%, rgba(128, 19, 54, 0.22), transparent 36%);
+  --scene-texture:
+    linear-gradient(110deg, transparent 0 38%, rgba(238, 69, 64, 0.08) 39% 40%, transparent 41% 100%),
+    linear-gradient(58deg, transparent 0 47%, rgba(81, 10, 50, 0.075) 48% 49%, transparent 50% 100%);
+  --scene-veil-opacity: 0.92;
+  --scene-texture-opacity: 0.5;
+  --dust-color: rgba(128, 19, 54, 0.28);
+  --social-bg: rgba(255, 246, 241, 0.9);
   --social-text: #510a32;
-  --social-hover-bg: rgba(238, 69, 64, 0.12);
-  --hero-aura: rgba(238, 69, 64, 0.22);
-  --hero-aura-soft: rgba(238, 69, 64, 0.1);
-  --hero-light-core: rgba(255, 223, 215, 0.92);
-  --hero-light-mid: rgba(255, 223, 215, 0.56);
-  --hero-light-edge: rgba(199, 44, 65, 0.16);
+  --social-hover-bg: rgba(238, 69, 64, 0.15);
+  --hero-aura: rgba(238, 69, 64, 0.28);
+  --hero-aura-soft: rgba(199, 44, 65, 0.13);
+  --hero-light-core: rgba(255, 244, 235, 0.96);
+  --hero-light-mid: rgba(238, 69, 64, 0.32);
+  --hero-light-edge: rgba(81, 10, 50, 0.18);
   --title-gradient: linear-gradient(135deg, #2d142c, #801336 78%);
   --role-color: #c72c41;
-  --role-caret: rgba(199, 44, 65, 0.7);
-  --divider-gradient: linear-gradient(90deg, rgba(199, 44, 65, 0.38), rgba(199, 44, 65, 0.03));
-  --summary-text: #5a334a;
+  --role-caret: rgba(238, 69, 64, 0.78);
+  --divider-gradient: linear-gradient(90deg, rgba(199, 44, 65, 0.48), rgba(199, 44, 65, 0.03));
+  --summary-text: #5c3149;
   --button-bg: linear-gradient(180deg, rgba(238, 69, 64, 0.96), rgba(199, 44, 65, 0.96));
   --button-text: #fff8f6;
-  --button-border: rgba(199, 44, 65, 0.22);
-  --button-highlight: rgba(255, 255, 255, 0.22);
-  --button-shadow: rgba(199, 44, 65, 0.22);
+  --button-border: rgba(128, 19, 54, 0.28);
+  --button-highlight: rgba(255, 255, 255, 0.26);
+  --button-shadow: rgba(128, 19, 54, 0.24);
   --button-orb-core: #ffd6cc;
   --button-orb-edge: #ee4540;
-  --ghost-bg: rgba(199, 44, 65, 0.05);
-  --ghost-hover-bg: rgba(199, 44, 65, 0.12);
+  --ghost-bg: rgba(255, 246, 241, 0.58);
+  --ghost-hover-bg: rgba(199, 44, 65, 0.14);
   --stage-glow:
-    radial-gradient(circle, rgba(238, 69, 64, 0.72) 0%, rgba(199, 44, 65, 0.22) 38%, rgba(128, 19, 54, 0.02) 72%, transparent 74%);
-  --stage-ring-border: rgba(199, 44, 65, 0.22);
+    radial-gradient(circle, rgba(238, 69, 64, 0.82) 0%, rgba(199, 44, 65, 0.32) 38%, rgba(81, 10, 50, 0.08) 72%, transparent 74%);
+  --stage-ring-border: rgba(199, 44, 65, 0.3);
   --stage-ring-gradient:
-    linear-gradient(135deg, rgba(238, 69, 64, 0.08) 0%, rgba(199, 44, 65, 0.12) 36%, rgba(128, 19, 54, 0.12) 100%);
+    linear-gradient(135deg, rgba(238, 69, 64, 0.1) 0%, rgba(199, 44, 65, 0.16) 36%, rgba(81, 10, 50, 0.14) 100%);
   --stage-ring-shadow:
-    0 0 0 24px rgba(238, 69, 64, 0.08),
-    0 0 0 52px rgba(199, 44, 65, 0.06),
-    0 0 0 84px rgba(128, 19, 54, 0.03),
-    inset 0 0 52px rgba(238, 69, 64, 0.08);
-  --overlay: rgba(81, 10, 50, 0.18);
-  --paper-border: rgba(128, 19, 54, 0.16);
+    0 0 0 24px rgba(238, 69, 64, 0.1),
+    0 0 0 52px rgba(199, 44, 65, 0.08),
+    0 0 0 84px rgba(81, 10, 50, 0.05),
+    inset 0 0 52px rgba(238, 69, 64, 0.1);
+  --overlay: rgba(45, 20, 44, 0.24);
+  --paper-border: rgba(81, 10, 50, 0.22);
   --paper-bg: linear-gradient(180deg, rgba(255, 252, 249, 0.99), rgba(248, 240, 236, 0.99));
   --paper-shadow: 0 34px 90px rgba(81, 10, 50, 0.18);
   --paper-expanded-shadow: 0 56px 140px rgba(81, 10, 50, 0.25);
@@ -210,16 +228,16 @@
   --paper-action-border: rgba(128, 19, 54, 0.12);
   --paper-action-text: #801336;
   --paper-action-hover-bg: #ffeae5;
-  --control-bg: rgba(255, 247, 245, 0.88);
-  --control-border: rgba(128, 19, 54, 0.14);
+  --control-bg: rgba(255, 246, 241, 0.88);
+  --control-border: rgba(128, 19, 54, 0.16);
   --control-text: #510a32;
   --control-icon-bg: rgba(128, 19, 54, 0.06);
   --control-icon-hover: rgba(199, 44, 65, 0.12);
   --arrow-bg: rgba(128, 19, 54, 0.08);
   --arrow-hover-bg: rgba(199, 44, 65, 0.16);
-  --stat-bg: linear-gradient(180deg, rgba(255, 251, 249, 0.96), rgba(255, 238, 234, 0.98));
-  --stat-border: rgba(128, 19, 54, 0.12);
-  --panel-shine: linear-gradient(90deg, transparent, rgba(238, 69, 64, 0.08), transparent);
+  --stat-bg: linear-gradient(180deg, rgba(255, 248, 244, 0.94), rgba(255, 229, 221, 0.96));
+  --stat-border: rgba(128, 19, 54, 0.16);
+  --panel-shine: linear-gradient(90deg, transparent, rgba(238, 69, 64, 0.1), transparent);
   --panel-text: #60374d;
   --timeline-company: #801336;
   --timeline-location: #866070;
@@ -252,6 +270,25 @@
     radial-gradient(circle at 84% 62%, var(--dust-color) 0 1px, transparent 1.4px),
     var(--scene-background);
   transition: all 0.3s ease;
+}
+
+.app-background::before,
+.app-background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.app-background::before {
+  background: var(--scene-veil);
+  opacity: var(--scene-veil-opacity);
+}
+
+.app-background::after {
+  background: var(--scene-texture);
+  opacity: var(--scene-texture-opacity);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
 }
 
 [data-theme="light"] .app-background {
