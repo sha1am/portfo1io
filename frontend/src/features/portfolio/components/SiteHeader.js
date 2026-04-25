@@ -4,6 +4,7 @@ import { THEME, STORAGE, A11Y } from '../../../shared/constants';
 const SiteHeader = ({ navigationItems }) => {
   const [theme, setTheme] = useState(THEME.DEFAULT);
   const nextTheme = theme === THEME.DARK ? THEME.LIGHT : THEME.DARK;
+  const isSwitchingToLight = nextTheme === THEME.LIGHT;
 
   useEffect(() => {
     const savedTheme = localStorage.getItem(STORAGE.KEYS.THEME) || THEME.DEFAULT;
@@ -38,7 +39,14 @@ const SiteHeader = ({ navigationItems }) => {
         onClick={toggleTheme}
         aria-label={A11Y.LABELS.SWITCH_TO_THEME.replace('{theme}', nextTheme)}
       >
-        <span className={`theme-chip__icon ${nextTheme === THEME.LIGHT ? 'theme-chip__sun' : 'theme-chip__moon'}`} />
+        {isSwitchingToLight ? (
+          <svg className="theme-chip__icon theme-chip__sun" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="13" />
+            <path d="M32 6v9M32 49v9M6 32h9M49 32h9M13.6 13.6l6.4 6.4M44 44l6.4 6.4M50.4 13.6 44 20M20 44l-6.4 6.4" />
+          </svg>
+        ) : (
+          <span className="theme-chip__icon theme-chip__moon" />
+        )}
       </button>
     </header>
   );

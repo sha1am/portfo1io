@@ -35,22 +35,24 @@ const PortfolioPage = () => (
       <div className="scroll-cue">Scroll Down</div>
       <StatsStrip items={stats} />
 
-      <section className="content-grid">
-        <SectionPanel id="about" eyebrow={aboutSection.eyebrow} title={aboutSection.title}>
-          {aboutSection.paragraphs.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
-        </SectionPanel>
-
-        <SectionPanel id="skills" eyebrow={skillsSection.eyebrow} title={skillsSection.title}>
-          <div className="chip-grid">
-            {skillsSection.items.map((skill) => (
-              <span key={skill} className="skill-chip">
-                {skill}
-              </span>
+      <div className="portfolio-sections">
+        <div className="portfolio-row portfolio-row--intro">
+          <SectionPanel id="about" eyebrow={aboutSection.eyebrow} title={aboutSection.title}>
+            {aboutSection.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
             ))}
-          </div>
-        </SectionPanel>
+          </SectionPanel>
+
+          <SectionPanel id="skills" eyebrow={skillsSection.eyebrow} title={skillsSection.title}>
+            <div className="chip-grid">
+              {skillsSection.items.map((skill) => (
+                <span key={skill} className="skill-chip">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </SectionPanel>
+        </div>
 
         <SectionPanel id="projects" eyebrow="Projects" title="Selected work that balances engineering depth with product feel." wide>
           <div className="card-grid">
@@ -82,28 +84,30 @@ const PortfolioPage = () => (
           <ExperienceDeck experiences={experienceCards} />
         </SectionPanel>
 
-        <SectionPanel id="achievements" eyebrow={achievementsSection.eyebrow} title={achievementsSection.title} wide>
-          <div className="card-grid">
-            {achievementsSection.items.map((achievement) => (
-              <article key={achievement.title} className="content-card">
-                <h3>{achievement.title}</h3>
-                <p>{achievement.description}</p>
-              </article>
-            ))}
-          </div>
-        </SectionPanel>
+        <div className="portfolio-row portfolio-row--credibility">
+          <SectionPanel id="achievements" eyebrow={achievementsSection.eyebrow} title={achievementsSection.title}>
+            <div className="card-grid card-grid--compact">
+              {achievementsSection.items.map((achievement) => (
+                <article key={achievement.title} className="content-card">
+                  <h3>{achievement.title}</h3>
+                  <p>{achievement.description}</p>
+                </article>
+              ))}
+            </div>
+          </SectionPanel>
 
-        <SectionPanel id="contact" eyebrow="Contact" title="Available for meaningful backend and product engineering work." wide>
-          <div className="contact-grid">
-            {contactCards.map((item) => (
-              <a key={item.label} className="contact-card" href={item.href} target="_blank" rel="noreferrer">
-                <span>{item.label}</span>
-                <strong>{item.value}</strong>
-              </a>
-            ))}
-          </div>
-        </SectionPanel>
-      </section>
+          <SectionPanel id="contact" eyebrow="Contact" title="Available for meaningful backend and product engineering work.">
+            <div className="contact-grid">
+              {contactCards.map((item) => (
+                <a key={item.label} className="contact-card" href={item.href} target="_blank" rel="noreferrer">
+                  <span>{item.label}</span>
+                  <strong>{item.value}</strong>
+                </a>
+              ))}
+            </div>
+          </SectionPanel>
+        </div>
+      </div>
     </main>
   </div>
 );

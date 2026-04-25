@@ -25,12 +25,6 @@ const ResumePreview = ({ className, resumeAsset }) => {
     }
   };
 
-  const resetPose = () => {
-    clearResetTimer();
-    setIsDragging(false);
-    setPose(RESUME.POSE.INITIAL);
-  };
-
   const scheduleReset = (delay = RESUME.POSE.RESET_DELAY) => {
     clearResetTimer();
     resetTimer.current = window.setTimeout(() => {
@@ -40,10 +34,6 @@ const ResumePreview = ({ className, resumeAsset }) => {
   };
 
   const handlePointerDown = (event) => {
-    if (event.target.closest('.resume-page__preview-actions')) {
-      return;
-    }
-
     event.preventDefault();
     clearResetTimer();
     setIsDragging(true);
@@ -127,14 +117,6 @@ const ResumePreview = ({ className, resumeAsset }) => {
             allow="autoplay"
           />
         </div>
-      </div>
-      <div className="resume-page__preview-actions">
-        <button type="button" onClick={resetPose}>
-          Reset
-        </button>
-        <a href={resumeAsset.viewUrl} target="_blank" rel="noreferrer">
-          Open
-        </a>
       </div>
     </article>
   );

@@ -13,7 +13,7 @@ export const RESUME = {
       shiftX: 0,
       shiftY: 0,
     },
-    RESET_DELAY: 650,
+    RESET_DELAY: 500,
   },
 };
 
