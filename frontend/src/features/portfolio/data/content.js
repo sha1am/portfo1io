@@ -22,8 +22,8 @@ export const heroContent = {
   roles: ['Backend Engineer', 'Go & Python Developer', 'Distributed Systems Builder', 'Product-Minded Engineer'],
   summaryPoints: [
     '3+ years building production backend systems in Go and Python.',
-    'Improved throughput 2x in document processing and reduced false positives by 20%.',
-    'Built services used by 2M+ users with a focus on reliability, scale, and developer velocity.',
+    'Focused on APIs, event-driven workflows, and internal platforms that need to stay reliable under scale.',
+    'I care about clean architecture, delivery quality, and systems that are easy to extend.',
   ],
   primaryActionLabel: 'View Resume',
   secondaryActionLabel: 'Get In Touch',

@@ -16,12 +16,6 @@ Both deployment targets are codified in the repository so the project can be sto
 - Build command: `npm run build`
 - Output directory: `dist`
 
-### Required environment variable
-
-```bash
-REACT_APP_API_URL=https://your-render-service.onrender.com
-```
-
 ### Notes
 
 - `frontend/vercel.json` enables clean routing and security headers

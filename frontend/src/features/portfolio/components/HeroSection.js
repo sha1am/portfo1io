@@ -21,7 +21,7 @@ const RoleRotator = ({ roles }) => {
   );
 };
 
-const HeroSection = ({ heroContent, socialLinks, resumeCards, resumeAsset, apiStatus }) => (
+const HeroSection = ({ heroContent, socialLinks, resumeCards, resumeAsset }) => (
   <section className="hero-section">
     <SocialLinks links={socialLinks} />
 
@@ -40,10 +40,6 @@ const HeroSection = ({ heroContent, socialLinks, resumeCards, resumeAsset, apiSt
         {heroContent.summaryPoints.map((point) => (
           <span key={point}>{point}</span>
         ))}
-      </div>
-      <div className="hero-status" aria-live="polite">
-        <span className={`hero-status__dot hero-status__dot--${apiStatus.state}`} aria-hidden="true" />
-        <span>{apiStatus.label}</span>
       </div>
 
       <div className="hero-actions">

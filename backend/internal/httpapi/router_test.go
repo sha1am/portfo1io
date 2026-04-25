@@ -101,3 +101,23 @@ func TestRouterEndpoints(t *testing.T) {
 		})
 	}
 }
+
+func TestRouterPreservesRequestID(t *testing.T) {
+	t.Parallel()
+
+	router := NewRouter(
+		config.Config{AllowedOrigin: "*"},
+		slog.New(slog.NewJSONHandler(io.Discard, nil)),
+		status.NewService("portfolio-api"),
+	)
+
+	request := httptest.NewRequest(http.MethodGet, "/health", nil)
+	request.Header.Set("X-Request-ID", "test-request-id")
+	recorder := httptest.NewRecorder()
+
+	router.ServeHTTP(recorder, request)
+
+	if recorder.Header().Get("X-Request-ID") != "test-request-id" {
+		t.Fatalf("expected request id to be preserved")
+	}
+}

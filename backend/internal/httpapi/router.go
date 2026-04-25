@@ -16,5 +16,5 @@ func NewRouter(cfg config.Config, logger *slog.Logger, statusService *status.Ser
 	mux.HandleFunc("/health", statusHandler.Health)
 	mux.HandleFunc("/api/status", statusHandler.Status)
 
-	return withLogging(logger, withRequestID(withCORS(cfg.AllowedOrigin, mux)))
+	return withRequestID(withLogging(logger, withCORS(cfg.AllowedOrigin, mux)))
 }

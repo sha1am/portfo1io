@@ -98,7 +98,6 @@ frontend/vercel.json       Vercel routing and headers
 
 ```bash
 cd frontend
-cp .env.example .env
 npm ci
 npm start
 ```
@@ -115,15 +114,7 @@ go run ./cmd/api
 
 Backend runs at [http://localhost:8000](http://localhost:8000).
 
-## Environment Variables
-
-### Frontend
-
-| Variable | Required | Description |
-| --- | --- | --- |
-| `REACT_APP_API_URL` | No | Base URL for the Go API. Defaults to `http://localhost:8000` |
-
-### Backend
+## Backend Environment Variables
 
 | Variable | Required | Description |
 | --- | --- | --- |
