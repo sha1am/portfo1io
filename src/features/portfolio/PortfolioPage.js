@@ -56,6 +56,10 @@ const PortfolioPage = () => (
           </SectionPanel>
         </div>
 
+        <SectionPanel id="experience" eyebrow="Experience" title="Hands-on work across APIs, automation, reporting, and platform reliability." wide>
+          <ExperienceDeck experiences={experienceCards} />
+        </SectionPanel>
+
         <SectionPanel id="projects" eyebrow="Projects" title="Selected work that balances engineering depth with product feel." wide>
           <div className="card-grid">
             {projectCards.map((project) => (
@@ -80,10 +84,6 @@ const PortfolioPage = () => (
               </article>
             ))}
           </div>
-        </SectionPanel>
-
-        <SectionPanel id="experience" eyebrow="Experience" title="Hands-on work across APIs, automation, reporting, and platform reliability." wide>
-          <ExperienceDeck experiences={experienceCards} />
         </SectionPanel>
 
         <div className="portfolio-row portfolio-row--credibility">

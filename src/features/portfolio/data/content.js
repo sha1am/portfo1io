@@ -4,8 +4,8 @@ import { createGoogleDriveAsset } from '../../../shared/utils/googleDrive';
 export const navigationItems = [
   { href: '#about', label: 'About' },
   { href: '#skills', label: 'Skills' },
-  { href: '#projects', label: 'Projects' },
   { href: '#experience', label: 'Experience' },
+  { href: '#projects', label: 'Projects' },
   { href: '#achievements', label: 'Achievements' },
   { href: '#contact', label: 'Contact' },
 ];
