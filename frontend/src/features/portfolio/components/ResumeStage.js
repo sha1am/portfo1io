@@ -4,85 +4,9 @@ import { RESUME } from '../../../shared/constants';
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
 const ResumePreview = ({ className, resumeAsset }) => {
-  const [pose, setPose] = useState(RESUME.POSE.INITIAL);
-  const [isDragging, setIsDragging] = useState(false);
-  const dragState = useRef(null);
-  const resetTimer = useRef(null);
-
-  const clearResetTimer = () => {
-    if (resetTimer.current) {
-      window.clearTimeout(resetTimer.current);
-      resetTimer.current = null;
-    }
-  };
-
-  const scheduleReset = (delay = RESUME.POSE.RESET_DELAY) => {
-    clearResetTimer();
-    resetTimer.current = window.setTimeout(() => {
-      setIsDragging(false);
-      setPose(RESUME.POSE.INITIAL);
-    }, delay);
-  };
-
-  const handlePointerDown = (event) => {
-    event.preventDefault();
-    clearResetTimer();
-    setIsDragging(true);
-
-    dragState.current = {
-      startX: event.clientX,
-      startY: event.clientY,
-      startPose: pose,
-    };
-
-    event.currentTarget.setPointerCapture?.(event.pointerId);
-  };
-
-  const handlePointerMove = (event) => {
-    if (!dragState.current) {
-      return;
-    }
-
-    const dx = event.clientX - dragState.current.startX;
-    const dy = event.clientY - dragState.current.startY;
-
-    setPose({
-      rotateX: clamp(dragState.current.startPose.rotateX - dy / 18, -24, 16),
-      rotateY: clamp(dragState.current.startPose.rotateY + dx / 14, -42, 20),
-      rotateZ: clamp(dragState.current.startPose.rotateZ + dx / 120, -6, 6),
-      shiftX: clamp(dx / 2.2, -38, 38),
-      shiftY: clamp(dy / 3.5, -26, 26),
-    });
-  };
-
-  const handlePointerUp = (event) => {
-    if (!dragState.current) {
-      return;
-    }
-
-    dragState.current = null;
-    event.currentTarget.releasePointerCapture?.(event.pointerId);
-    scheduleReset();
-  };
-
-  useEffect(() => () => {
-    clearResetTimer();
-  }, []);
-
   return (
     <article
-      className={`resume-page ${className} resume-page--interactive${isDragging ? ' is-dragging' : ''}`}
-      style={{
-        '--page-rotate-x': `${pose.rotateX}deg`,
-        '--page-rotate-y': `${pose.rotateY}deg`,
-        '--page-rotate-z': `${pose.rotateZ}deg`,
-        '--page-shift-x': `${pose.shiftX}px`,
-        '--page-shift-y': `${pose.shiftY}px`,
-      }}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerUp}
+      className={`resume-page ${className}`}
     >
       <div className="resume-page__sheet">
         <div className="resume-page__preview-shell">
@@ -161,17 +85,7 @@ const ResumeStage = ({ cards, resumeAsset }) => (
         </a>
       </div>
 
-      <div className="stage-controls">
-        <div className="stage-control">
-          <span className="stage-control__icon">↻</span>
-          <span>Drag to inspect</span>
-        </div>
-        <div className="stage-arrows" aria-hidden="true">
-          <span>‹</span>
-          <span>›</span>
-        </div>
-      </div>
-    </div>
+          </div>
   </div>
 );
 

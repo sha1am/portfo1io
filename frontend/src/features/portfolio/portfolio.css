@@ -1114,9 +1114,11 @@
 }
 
 .hero-stage {
+  --resume-stage-width: clamp(280px, 34vw, 430px);
+  --resume-stage-height: calc(var(--resume-stage-width) * 1.4143);
   position: relative;
   width: 100%;
-  min-height: clamp(560px, 72vh, 720px);
+  min-height: calc(var(--resume-stage-height) + 11rem);
   perspective: 1800px;
   scroll-margin-top: 7rem;
   animation: rise-in 850ms 120ms ease-out both;
@@ -1131,7 +1133,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: -1.75rem;
   height: clamp(120px, 18vh, 170px);
   pointer-events: none;
   z-index: 1;
@@ -1152,7 +1154,7 @@
 .stage-content {
   position: relative;
   width: min(680px, 100%);
-  min-height: clamp(430px, 62vh, 620px);
+  min-height: calc(var(--resume-stage-height) + 3.5rem);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1176,7 +1178,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
-  margin-top: 0.75rem;
+  margin-top: 0;
 }
 
 .stage-controls {
@@ -1187,6 +1189,18 @@
   gap: 0.75rem;
 }
 
+.stage-actions {
+  position: static;
+  transform: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  padding: 0 1rem;
+  z-index: 4;
+}
+
 @keyframes podium-pulse {
   0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.9; }
   50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
@@ -1195,7 +1209,7 @@
 .stage-rings {
   position: absolute;
   left: 50%;
-  bottom: -2rem;
+  bottom: -3rem;
   width: min(620px, 88%);
   height: 280px;
   transform: translateX(-50%) rotateX(60deg) rotateZ(5deg);
@@ -1235,84 +1249,62 @@
 
 .resume-page--center {
   position: absolute;
-  top: clamp(0.5rem, 2vh, 1.25rem);
+  top: 3rem;
   bottom: auto;
   left: 50%;
-  width: clamp(280px, 34vw, 430px);
-  aspect-ratio: 210 / 297;
-  min-height: 0;
+  width: var(--resume-stage-width);
+  min-height: auto;
   max-height: none;
-  transform: translateX(-50%)
-    translate(var(--page-shift-x, 0), var(--page-shift-y, 0))
-    rotateX(var(--page-rotate-x, -14deg))
-    rotateY(var(--page-rotate-y, -7deg))
-    rotateZ(var(--page-rotate-z, 1.2deg))
-    scale(0.95);
-  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.5s ease,
-              width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              aspect-ratio 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%) scale(0.9);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              width 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 10;
   border-radius: 1.15rem;
-  background: transparent;
-  border: 0;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow:
-    0 25px 50px -12px rgba(0, 0, 0, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.08);
-  animation: float-resume 6s ease-in-out infinite;
-}
-
-@keyframes float-resume {
-  0%, 100% {
-    transform: translateX(-50%)
-      translate(var(--page-shift-x, 0), var(--page-shift-y, -5px))
-      rotateX(var(--page-rotate-x, -14deg))
-      rotateY(var(--page-rotate-y, -7deg))
-      rotateZ(var(--page-rotate-z, 1.2deg))
-      scale(0.95);
-  }
-  50% {
-    transform: translateX(-50%)
-      translate(var(--page-shift-x, 0), var(--page-shift-y, 5px))
-      rotateX(var(--page-rotate-x, -14deg))
-      rotateY(var(--page-rotate-y, -7deg))
-      rotateZ(var(--page-rotate-z, 1.2deg))
-      scale(0.95);
-  }
+    0 20px 40px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  cursor: pointer;
+  margin-top: 2rem;
+  padding-top: 1rem;
 }
 
 .resume-page--center:hover {
-  width: clamp(300px, 36vw, 455px);
-  transform: translateX(-50%)
-    translate(var(--page-shift-x, 0), var(--page-shift-y, 0))
-    rotateX(var(--page-rotate-x, -8deg))
-    rotateY(var(--page-rotate-y, -4deg))
-    rotateZ(var(--page-rotate-z, 0.6deg))
-    scale(1.02);
+  width: 80vw;
+  max-width: 80vw;
+  height: auto;
+  max-height: 80vh;
+  transform: translateX(-50%) translateY(-50%) scale(1);
+  position: fixed;
+  top: 50%;
+  left: 50%;
   box-shadow:
-    0 35px 70px -15px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.14);
+    0 40px 80px -20px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  z-index: 1000;
+  overflow-y: auto;
+  overflow-x: hidden;
+  animation: none !important;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s,
+              width 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s,
+              height 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s,
+              box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
 }
 
-.resume-page--center.resume-page--interactive:not(.is-dragging):not(:hover) {
-  animation: resume-idle-rotation 8s ease-in-out infinite;
-}
-
-@keyframes resume-idle-rotation {
-  0%,
-  100% {
-    transform: translateX(-50%) translate(0, -10px) rotateX(-7deg) rotateY(-17deg) rotateZ(1.5deg);
-  }
-
-  50% {
-    transform: translateX(-50%) translate(6px, -16px) rotateX(-5.8deg) rotateY(-9deg) rotateZ(0.6deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .resume-page--center.resume-page--interactive:not(.is-dragging) {
-    animation: none;
-  }
+/* Add buffer zone to prevent hover triggering from page top */
+.resume-page--center::before {
+  content: '';
+  position: absolute;
+  top: -3rem;
+  left: 0;
+  right: 0;
+  height: 3rem;
+  z-index: -1;
+  pointer-events: none;
 }
 
 .resume-page--left {
@@ -1401,29 +1393,41 @@
 
 .resume-page__preview-shell {
   width: 100%;
-  height: 100%;
-  min-height: 0;
+  height: auto;
+  min-height: 100%;
   max-height: none;
-  aspect-ratio: 210 / 297;
   border: 0;
   border-radius: inherit;
-  background: transparent;
-  overflow: hidden;
+  background: white;
+  overflow: visible;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .resume-page__preview-image {
   width: 100%;
-  height: 100%;
-  min-height: 0;
+  height: auto;
+  min-height: auto;
   max-height: none;
   border: 0;
   border-radius: inherit;
   background: transparent;
   box-shadow: none;
-  object-fit: cover;
+  object-fit: contain;
   object-position: top center;
-  pointer-events: none;
+  pointer-events: auto;
   display: block;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.resume-page--center:hover .resume-page__preview-image {
+  transform: scale(1);
+  cursor: grab;
+}
+
+.resume-page--center:hover .resume-page__preview-image:active {
+  cursor: grabbing;
 }
 
 .resume-page__fold-pane {
@@ -1476,69 +1480,6 @@
 .stage-control:hover .stage-control__icon {
   background: var(--control-icon-hover);
   transform: rotate(180deg);
-}
-
-.stage-actions {
-  position: static;
-  transform: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1.2rem;
-  padding: 0 1rem;
-  z-index: 4;
-}
-
-.stage-actions .primary-button,
-.stage-actions .ghost-button {
-  min-height: 3.2rem;
-  padding: 0 1.8rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  border-radius: 1.2rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.stage-actions .primary-button:hover,
-.stage-actions .ghost-button:hover {
-  transform: translateY(-2px) scale(1.02);
-}
-
-.stage-arrows {
-  position: static;
-  width: 3.2rem;
-  height: 2.5rem;
-  border-radius: 1rem;
-  background: var(--arrow-bg);
-  color: var(--control-text);
-  transition: all 0.4s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  opacity: 0.7;
-  transform: none;
-}
-
-.stage-arrows span {
-  display: inline-grid;
-  place-items: center;
-  width: 3.2rem;
-  height: 2.5rem;
-  border-radius: 1rem;
-  background: var(--arrow-bg);
-  color: var(--control-text);
-  transition: all 0.4s ease;
-}
-
-.stage-arrows span:hover {
-  background: var(--arrow-hover-bg);
-  transform: scale(1.1);
-  color: var(--text-strong);
 }
 
 .scroll-cue {
@@ -2267,11 +2208,12 @@
   }
 
   .hero-stage {
-    min-height: 580px;
+    --resume-stage-width: min(320px, 72vw);
+    min-height: calc(var(--resume-stage-height) + 10.5rem);
   }
 
   .stage-content {
-    min-height: 455px;
+    min-height: calc(var(--resume-stage-height) + 3.25rem);
   }
 
   .experience-deck {
@@ -2296,7 +2238,6 @@
 
   .resume-page--center {
     top: 0.6rem;
-    width: min(320px, 72vw);
   }
 
   .stage-control {
@@ -2412,21 +2353,21 @@
   }
 
   .hero-stage {
-    min-height: 590px;
+    --resume-stage-width: min(260px, 76vw);
+    min-height: calc(var(--resume-stage-height) + 12rem);
     padding: 1rem 0;
   }
 
   .stage-content {
-    min-height: 405px;
+    min-height: calc(var(--resume-stage-height) + 3.75rem);
   }
 
   .stage-dock {
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
   }
 
   .resume-page--center {
     top: 0.5rem;
-    width: min(260px, 76vw);
     padding: 0.4rem;
   }
 
