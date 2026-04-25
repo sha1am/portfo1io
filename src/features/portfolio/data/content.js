@@ -136,7 +136,7 @@ export const experienceCards = [
     techStack: ['Python', 'Go', 'REST APIs', 'Microservices', 'Docker', 'AWS', 'PostgreSQL', 'MySQL', 'Kubernetes'],
   },
   {
-    range: 'November 2024 - Present',
+    range: 'November 2024 - November 2025',
     role: 'SDE-1 Backend',
     company: 'Park+',
     location: 'India · On-site',
