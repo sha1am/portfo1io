@@ -1,30 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta
-    name="description"
-    content="Portfolio of Shadab Alam, a backend-focused software engineer building scalable Go and Python systems with measurable product impact."
-  >
-  <meta name="theme-color" content="#07111d">
-  <meta property="og:title" content="Shadab Alam | Software Engineer">
-  <meta
-    property="og:description"
-    content="Backend engineering portfolio focused on scalable systems, product delivery, and production-ready implementation."
-  >
+
+  <title>Shadab Alam | Backend Engineer</title>
+  <meta name="description" content="Shadab Alam is a backend engineer building scalable Go and Python systems - APIs, event-driven services, and internal platforms with measurable product impact.">
+  <meta name="author" content="Shadab Alam">
+  <link rel="canonical" href="https://sha1am.github.io/portfo1io/">
+
+  <meta name="theme-color" content="#080b10" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
+
   <meta property="og:type" content="website">
-  <meta property="og:image" content="/favicon.ico">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Shadab Alam | Software Engineer">
-  <meta
-    name="twitter:description"
-    content="Go, Python, backend systems, data-heavy workflows, and production-focused engineering."
-  >
-  <link rel="icon" href="/favicon.ico">
-  <title>Shadab Alam | Software Engineer</title>
+  <meta property="og:url" content="https://sha1am.github.io/portfo1io/">
+  <meta property="og:site_name" content="Shadab Alam">
+  <meta property="og:title" content="Shadab Alam | Backend Engineer">
+  <meta property="og:description" content="Backend engineering portfolio: scalable Go and Python systems, event-driven services, and production-ready delivery.">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Shadab Alam | Backend Engineer">
+  <meta name="twitter:description" content="Go, Python, backend systems, data-heavy workflows, and production-focused engineering.">
+
+  <link rel="icon" href="favicon.ico">
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700&display=swap">
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Shadab Alam",
+      "jobTitle": "Software Engineer",
+      "url": "https://sha1am.github.io/portfo1io/",
+      "email": "mailto:shadab.connect17@gmail.com",
+      "knowsAbout": ["Go", "Python", "Distributed Systems", "REST APIs", "Kafka", "Kubernetes"],
+      "sameAs": [
+        "https://github.com/sha1am",
+        "https://www.linkedin.com/in/sha1am/",
+        "https://leetcode.com/u/sha1am/"
+      ]
+    }
+  </script>
+
+  <!--
+    Applies the saved theme before first paint so the page never flashes
+    the wrong colours. Must stay inline and stay in <head>.
+  -->
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('portfolio-theme');
+        var theme = stored === 'light' || stored === 'dark'
+          ? stored
+          : (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.style.colorScheme = theme;
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
 </head>
 <body>
   <div id="root"></div>
+  <noscript>
+    This portfolio is a React application and needs JavaScript enabled. You can
+    reach Shadab Alam at shadab.connect17@gmail.com or github.com/sha1am.
+  </noscript>
 </body>
 </html>

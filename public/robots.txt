@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sha1am.github.io/portfo1io/sitemap.xml

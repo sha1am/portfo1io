@@ -1,15 +1,16 @@
 {
-  "short_name": "Portfolio",
-  "name": "Shadab Alam Portfolio",
+  "name": "Shadab Alam | Backend Engineer",
+  "short_name": "Shadab Alam",
+  "description": "Portfolio of Shadab Alam, backend engineer working in Go and Python.",
   "icons": [
     {
       "src": "favicon.ico",
       "type": "image/x-icon",
-      "sizes": "48x48 72x72 96x96 144x144 192x192 256x256 384x384 512x512"
+      "sizes": "48x48"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#07111d",
-  "background_color": "#07111d"
+  "theme_color": "#080b10",
+  "background_color": "#080b10"
 }

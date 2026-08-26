@@ -1,245 +1,76 @@
-# Shadab Alam - Professional Portfolio Website
+# Shadab Alam — Portfolio
 
-A modern, responsive portfolio website showcasing professional experience, technical skills, and coding achievements with interactive features and beautiful animations.
+A single-page portfolio built with React 18 and Webpack 5, deployed to GitHub
+Pages.
 
-## 🚀 Live Demo
+**Live:** https://sha1am.github.io/portfo1io/
 
-[**View Portfolio**](https://sha1am.github.io/portfo1io/)
+## Features
 
-## ✨ Features
+- **Sticky navigation** with scroll-progress bar, active-section highlighting
+  driven by scroll position, and a slide-down menu below 900px.
+- **Light and dark themes.** The choice is persisted in `localStorage` and
+  applied by an inline script in `<head>` before first paint, so the page never
+  flashes the wrong theme.
+- **Design token system.** Colour, type scale, spacing, radii and motion are all
+  CSS custom properties defined once in `src/features/portfolio/portfolio.css`;
+  the light theme re-declares the same names.
+- **Accessible by default.** Skip link, visible focus rings, labelled controls,
+  Escape-to-close and scroll-lock on the mobile menu, and a full
+  `prefers-reduced-motion` path that disables every animation.
+- **Content-driven.** All copy, roles, projects and links live in
+  `src/features/portfolio/data/content.js` — no JSX edits needed to update the
+  site's content.
 
-### 🎨 **Beautiful Design**
-- Modern, clean interface with smooth animations
-- Fully responsive design for all devices
-- Professional typography and color scheme
-- 3D floating effects and micro-interactions
+## Getting started
 
-### 📄 **Interactive Resume**
-- **Hover Magnification**: Resume expands to 80% screen size on hover
-- **Scrollable Modal**: Full resume content is scrollable in expanded view
-- **Smooth Transitions**: Professional animations without flickering
-- **PDF Download**: Direct access to downloadable resume
-
-### 💻 **Dynamic Coding Profiles**
-- **Real-time Stats**: Live problem counts from coding platforms
-- **Animated Progress Bars**: Visual representation of coding achievements
-- **Platform Integration**: 
-  - LeetCode (182 problems solved)
-  - CodeForces (153 problems solved)
-  - Stratascratch (25 problems solved)
-- **Official Logos**: Professional branding for each platform
-
-### 🎯 **Key Components**
-- **Hero Section**: Professional introduction with call-to-action
-- **Experience Deck**: Showcase of professional experience
-- **Skills Display**: Technical skills and proficiencies
-- **Contact Section**: Easy ways to get in touch
-
-## 🛠️ Technical Stack
-
-### **Frontend**
-- **React 18.3.1**: Modern component-based architecture
-- **Webpack 5**: Optimized bundling and asset management
-- **CSS3**: Advanced animations and responsive design
-- **Babel**: Modern JavaScript transpilation
-
-### **Build Tools**
-- **Webpack Dev Server**: Hot module replacement
-- **CSS Loader**: Optimized CSS processing
-- **HTML Webpack Plugin**: Automatic HTML generation
-
-### **Deployment**
-- **GitHub Pages**: Free hosting with automatic deployment
-- **GitHub Actions**: CI/CD pipeline for builds
-- **Node.js 18**: Build environment
-
-## 📁 Project Structure
-
-```
-frontend/
-├── src/
-│   ├── app/
-│   │   ├── App.js                 # Main React application
-│   │   └── global.css            # Global styles
-│   ├── assets/
-│   │   └── images/               # Portfolio assets
-│   │       ├── profile-picture.png
-│   │       ├── resume-preview.jpg
-│   │       ├── Shadab_Alam_Resume.pdf
-│   │       └── platform logos
-│   ├── features/
-│   │   └── portfolio/
-│   │       ├── PortfolioPage.js  # Main portfolio page
-│   │       ├── components/       # React components
-│   │       ├── hooks/           # Custom React hooks
-│   │       ├── services/        # API services
-│   │       └── data/            # Portfolio data
-│   └── shared/
-│       └── utils/               # Utility functions
-├── public/
-├── .github/workflows/            # GitHub Actions
-├── dist/                         # Production build
-└── package.json
-```
-
-## 🚀 Getting Started
-
-### **Prerequisites**
-- Node.js 18 or higher
-- npm or yarn package manager
-
-### **Installation**
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/sha1am/portfo1io.git
-cd portfo1io/frontend
-```
-
-2. **Install dependencies**
 ```bash
 npm install
+npm start          # dev server on http://localhost:3000
+npm run build      # production build into dist/
 ```
 
-3. **Start development server**
-```bash
-npm start
+## Project structure
+
+```
+src/
+├── app/                      App root and CSS reset
+├── shared/
+│   ├── constants/            Theme, storage keys, a11y labels
+│   ├── hooks/                useTheme, useActiveSection, useScrollState, useReveal
+│   └── utils/                Google Drive URL helpers
+├── features/portfolio/
+│   ├── PortfolioPage.js      Page composition
+│   ├── portfolio.css         Design tokens + all component styles
+│   ├── components/           Header, hero, timeline, cards, footer, icons
+│   └── data/content.js       All site content
+└── assets/images/
 ```
 
-4. **Open your browser**
-Navigate to `http://localhost:3000`
+## Updating content
 
-### **Build for Production**
+| What | Where |
+| --- | --- |
+| Résumé link | `resumeAsset` in `data/content.js` (paste any Google Drive share URL) |
+| Experience, projects, skills | the matching export in `data/content.js` |
+| Coding-profile counts | `codingProfiles` in `data/content.js` |
+| Navigation items | `navigationItems` in `data/content.js` |
 
-```bash
-npm run build
-```
+### A note on the coding-profile counts
 
-The optimized files will be generated in the `dist/` folder.
+These are maintained by hand and deliberately so. LeetCode's GraphQL API sends
+no CORS headers, so a browser request from this site is blocked before it ever
+reaches the server; Codeforces and StrataScratch expose no usable public
+endpoint for solved counts. A previous version of this site shipped a fetch that
+failed on every page load and silently fell back to hardcoded numbers. Fetching
+them live would need a small server-side proxy.
 
-## 🎨 Customization
+## Deployment
 
-### **Updating Profile Information**
-
-Edit `src/features/portfolio/data/content.js`:
-
-```javascript
-export const personalInfo = {
-  name: "Your Name",
-  title: "Your Title",
-  greeting: "Your greeting message",
-  // ... other personal details
-};
-```
-
-### **Updating Coding Stats**
-
-The coding stats are fetched dynamically. To update manually:
-
-```javascript
-export const codingProfiles = [
-  {
-    platform: "LeetCode",
-    problemsSolved: 182,
-    profileUrl: "your-leetcode-profile",
-    // ... other details
-  },
-  // ... other platforms
-];
-```
-
-### **Modifying Resume**
-
-Replace the resume files in `src/assets/images/`:
-- `Shadab_Alam_Resume.pdf` - Full resume
-- `resume-preview.jpg` - Resume preview image
-
-## 🔧 Configuration
-
-### **Webpack Configuration**
-
-The webpack configuration is in `webpack.config.js`:
-- Development server setup
-- Asset optimization
-- CSS processing
-- Bundle optimization
-
-### **GitHub Pages Deployment**
-
-The project is configured for automatic deployment via GitHub Actions:
-- Builds automatically on push to main branch
-- Deploys to GitHub Pages
-- Uses Node.js 18 environment
-
-## 🎯 Key Features Implementation
-
-### **Resume Hover Effect**
-The resume uses CSS transforms and transitions for smooth magnification:
-
-```css
-.resume-page--center:hover {
-  width: 80vw;
-  max-height: 80vh;
-  transform: translateX(-50%) translateY(-50%) scale(1);
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  z-index: 1000;
-  overflow-y: auto;
-}
-```
-
-### **Dynamic Stats Fetching**
-Real-time coding stats are fetched using custom hooks:
-
-```javascript
-const useCodingStats = () => {
-  // Fetches stats from LeetCode, CodeForces, Stratascratch
-  // Handles loading states and errors
-  // Updates UI with live data
-};
-```
-
-### **Responsive Design**
-The portfolio uses modern CSS techniques:
-- CSS Grid and Flexbox layouts
-- Mobile-first responsive design
-- Smooth animations and transitions
-
-## 🌟 Performance Optimizations
-
-- **Code Splitting**: Optimized bundle sizes
-- **Image Optimization**: Compressed images with proper formats
-- **CSS Minification**: Optimized stylesheets
-- **Asset Caching**: Proper cache headers for static assets
-- **Lazy Loading**: Images and components loaded as needed
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Contact
-
-- **Portfolio**: https://sha1am.github.io/portfo1io/
-- **Email**: shadab171299@gmail.com
-- **LinkedIn**: [Your LinkedIn Profile]
-- **GitHub**: https://github.com/sha1am
-
-## 🙏 Acknowledgments
-
-- React team for the amazing framework
-- GitHub Pages for free hosting
-- All coding platforms for the APIs and inspiration
-- The open-source community for valuable tools and libraries
+Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds and
+publishes `dist/` to GitHub Pages. `vercel.json` is included for Vercel
+deployments.
 
 ---
 
-**Build by Shadab Alam**
+Built by Shadab Alam.

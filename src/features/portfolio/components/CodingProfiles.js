@@ -1,74 +1,38 @@
 import React from 'react';
-import CircularProgressBar from './CircularProgressBar';
 import PlatformLogo from './PlatformLogo';
-import { useCodingStats } from '../hooks/useCodingStats';
 
-const CodingProfiles = ({ initialProfiles }) => {
-  const { profiles, loading, error } = useCodingStats(initialProfiles);
+const CodingProfiles = ({ initialProfiles }) => (
+  <section className="profiles" aria-labelledby="profiles-title">
+    <h2 className="profiles__title" id="profiles-title">
+      Coding profiles
+    </h2>
 
-  if (loading) {
-    return (
-      <div className="coding-profiles">
-        <h3 className="coding-profiles__title">Coding Profiles</h3>
-        <div className="coding-profiles__loading">
-          <div className="loading-spinner"></div>
-          <p>Fetching statistics...</p>
-        </div>
-      </div>
-    );
-  }
+    <div className="profiles__grid">
+      {initialProfiles.map((profile, index) => (
+        <a
+          key={profile.name}
+          href={profile.url}
+          target="_blank"
+          rel="noreferrer"
+          className="profile-card"
+          style={{ '--platform-color': profile.color, '--reveal-delay': `${index * 110}ms` }}
+          data-reveal
+        >
+          <span className="profile-card__logo" aria-hidden="true">
+            <PlatformLogo logoType={profile.logoType} />
+          </span>
 
-  if (error) {
-    return (
-      <div className="coding-profiles">
-        <h3 className="coding-profiles__title">Coding Profiles</h3>
-        <div className="coding-profiles__error">
-          <p>{error}</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="coding-profiles">
-      <h3 className="coding-profiles__title">Coding Profiles</h3>
-      <div className="coding-profiles__grid">
-        {profiles.map((profile, index) => {
-          const percentage = Math.round((profile.problemsSolved / profile.totalProblems) * 100);
-          
-          return (
-            <a
-              key={profile.name}
-              href={profile.url}
-              target="_blank"
-              rel="noreferrer"
-              className="coding-profile-card"
-              style={{ animationDelay: `${index * 200}ms` }}
-            >
-              <div className="profile-progress">
-                <CircularProgressBar
-                  percentage={percentage}
-                  color={profile.color}
-                  size={100}
-                  strokeWidth={6}
-                />
-                <div className="profile-icon">
-                  <PlatformLogo logoType={profile.logoType} className="platform-logo" />
-                </div>
-              </div>
-              <div className="profile-info">
-                <h4 className="profile-name">{profile.name}</h4>
-                <p className="profile-stats">
-                  {profile.problemsSolved}/{profile.totalProblems}
-                </p>
-                <p className="profile-percentage">{percentage}%</p>
-              </div>
-            </a>
-          );
-        })}
-      </div>
+          <span className="profile-card__meta">
+            <span className="profile-card__name">{profile.name}</span>
+            <span className="profile-card__count">
+              {profile.problemsSolved}
+              <span className="profile-card__unit"> solved</span>
+            </span>
+          </span>
+        </a>
+      ))}
     </div>
-  );
-};
+  </section>
+);
 
 export default CodingProfiles;

@@ -1,108 +1,119 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import portrait from '../../../assets/images/profile-picture.png';
-import ResumeStage from './ResumeStage';
+import Icon from './Icon';
 import CodingProfiles from './CodingProfiles';
 
-const iconPaths = {
-  github: (
-    <path d="M12 2C6.48 2 2 6.58 2 12.23c0 4.5 2.87 8.31 6.84 9.66.5.1.68-.22.68-.49 0-.24-.01-1.05-.01-1.9-2.78.62-3.37-1.2-3.37-1.2-.45-1.19-1.11-1.5-1.11-1.5-.9-.64.07-.63.07-.63 1 .08 1.52 1.04 1.52 1.04.88 1.55 2.31 1.11 2.87.85.09-.66.35-1.11.63-1.36-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.05A9.36 9.36 0 0 1 12 6.8c.85 0 1.7.12 2.49.36 1.9-1.33 2.74-1.05 2.74-1.05.56 1.4.21 2.44.1 2.7.64.72 1.03 1.64 1.03 2.76 0 3.93-2.34 4.79-4.57 5.05.36.32.68.95.68 1.92 0 1.39-.01 2.5-.01 2.84 0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.23C22 6.58 17.52 2 12 2Z" />
-  ),
-  linkedin: (
-    <path d="M6.94 8.5A1.44 1.44 0 1 0 6.94 5.62a1.44 1.44 0 0 0 0 2.88ZM5.7 10.2h2.5v8.1H5.7v-8.1Zm4.05 0h2.4v1.1h.04c.33-.62 1.16-1.28 2.38-1.28 2.55 0 3.03 1.73 3.03 3.98v4.3h-2.5v-3.81c0-.91-.02-2.08-1.23-2.08-1.24 0-1.42.99-1.42 2.01v3.88h-2.5v-8.1Z" />
-  ),
-  email: (
-    <path
-      d="M3.5 6.5h17a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-17a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Zm0 1.2 8.5 6 8.5-6"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  ),
-  phone: (
-    <path
-      d="M7.2 3.5h2.6l1.1 3.2-1.5 1.2c.77 1.54 2.02 2.79 3.56 3.56l1.2-1.5 3.2 1.1v2.6c0 .8-.65 1.45-1.45 1.45C9.75 16.11 4.89 11.25 4.89 4.95c0-.8.65-1.45 1.45-1.45Z"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  ),
-};
+const ROTATE_INTERVAL = 2800;
 
 const RoleRotator = ({ roles }) => {
-  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    if (roles.length < 2) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return undefined;
+    }
+
     const interval = setInterval(() => {
-      setCurrentRoleIndex((prevIndex) => (prevIndex + 1) % roles.length);
-    }, 3000); // Change role every 3 seconds
+      setIndex((current) => (current + 1) % roles.length);
+    }, ROTATE_INTERVAL);
 
     return () => clearInterval(interval);
   }, [roles.length]);
 
   return (
-    <p className="hero-role">
-      {roles[currentRoleIndex]}
+    <p className="hero__role" aria-live="polite">
+      <span key={index} className="hero__role-text">
+        {roles[index]}
+      </span>
     </p>
   );
 };
 
-const HeroSection = ({ heroContent, socialLinks, resumeCards, resumeAsset, codingProfiles }) => (
-  <section className="hero-section">
-    <div className="hero-container">
-      <div className="hero-left">
-        <div className="hero-intro">
-          <p className="hero-greeting">{heroContent.greeting}</p>
-          <h1 className="hero-title">{heroContent.name}</h1>
-          <div className="hero-roles">
-            <RoleRotator roles={heroContent.roles} />
-          </div>
+const HeroSection = ({ heroContent, socialLinks, resumeAsset, codingProfiles }) => (
+  <section className="hero" aria-labelledby="hero-name">
+    <div className="hero__grid">
+      <div className="hero__content">
+        {heroContent.availability && (
+          <p className="hero__badge">
+            <span className="hero__badge-dot" aria-hidden="true" />
+            {heroContent.availability}
+          </p>
+        )}
+
+        <p className="hero__greeting">{heroContent.greeting}</p>
+        <h1 className="hero__name" id="hero-name">
+          {heroContent.name}
+        </h1>
+        <RoleRotator roles={heroContent.roles} />
+
+        <p className="hero__summary">{heroContent.summary}</p>
+
+        <ul className="hero__points">
+          {heroContent.summaryPoints.map((point) => (
+            <li key={point}>{point}</li>
+          ))}
+        </ul>
+
+        <div className="hero__actions">
+          <a
+            className="button button--primary"
+            href={resumeAsset.viewUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Icon name="document" />
+            {heroContent.primaryActionLabel}
+          </a>
+          <a className="button button--ghost" href="#contact">
+            {heroContent.secondaryActionLabel}
+            <Icon name="arrowRight" />
+          </a>
         </div>
 
-        <div className="hero-description">
-          <div className="hero-summary">
-            {heroContent.summaryPoints.map((point, index) => (
-              <p key={index} className="summary-point">{point}</p>
+        <div className="hero__social">
+          <span className="hero__social-label">Find me on</span>
+          <div className="hero__social-links">
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                className="social-link"
+                href={link.href}
+                aria-label={link.label}
+                {...(link.external
+                  ? { target: '_blank', rel: 'noreferrer' }
+                  : {})}
+              >
+                <Icon name={link.icon} />
+              </a>
             ))}
           </div>
         </div>
-
-        <div className="hero-connections">
-          <div className="social-section">
-            <p className="social-label">Connect with me</p>
-            <div className="hero-social-links">
-              {socialLinks.map((link) => (
-                <a key={link.label} className="hero-social-link" href={link.href} target="_blank" rel="noreferrer" aria-label={link.label}>
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    {iconPaths[link.icon]}
-                  </svg>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
       </div>
 
-      <div className="hero-right">
-        <ResumeStage cards={resumeCards} resumeAsset={resumeAsset} />
-      </div>
-    </div>
+      <div className="hero__aside">
+        <figure className="portrait">
+          <span className="portrait__glow" aria-hidden="true" />
+          <img
+            className="portrait__image"
+            src={portrait}
+            alt="Shadab Alam"
+            width="420"
+            height="420"
+            fetchpriority="high"
+          />
+        </figure>
 
-    <div className="portrait-section">
-      <div className="portrait-row">
-        <div className="portrait-container">
-          <div className="portrait-frame">
-            <div className="portrait-aura" />
-            <div className="portrait-light" />
-            <img src={portrait} alt="Portrait of Shadab Alam" className="hero-portrait" />
-          </div>
-        </div>
         <CodingProfiles initialProfiles={codingProfiles} />
       </div>
     </div>
+
+    <a className="scroll-cue" href="#about" aria-label="Scroll to About section">
+      <span className="scroll-cue__mouse" aria-hidden="true">
+        <span className="scroll-cue__wheel" />
+      </span>
+      <span className="scroll-cue__label">Scroll</span>
+    </a>
   </section>
 );
 

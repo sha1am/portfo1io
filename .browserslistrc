@@ -1,0 +1,6 @@
+# Modern evergreen browsers only - keeps the bundle small by not shipping
+# transforms and polyfills for browsers this site does not target.
+> 0.5%
+last 2 versions
+not dead
+not op_mini all

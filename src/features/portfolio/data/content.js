@@ -1,4 +1,3 @@
-import resumePreview from '../../../assets/images/resume-preview.jpg';
 import { createGoogleDriveAsset } from '../../../shared/utils/googleDrive';
 
 export const navigationItems = [
@@ -11,16 +10,19 @@ export const navigationItems = [
 ];
 
 export const socialLinks = [
-  { href: 'https://github.com/sha1am', label: 'GitHub', icon: 'github' },
-  { href: 'https://www.linkedin.com/in/sha1am/', label: 'LinkedIn', icon: 'linkedin' },
+  { href: 'https://github.com/sha1am', label: 'GitHub', icon: 'github', external: true },
+  { href: 'https://www.linkedin.com/in/sha1am/', label: 'LinkedIn', icon: 'linkedin', external: true },
   { href: 'mailto:shadab.connect17@gmail.com', label: 'Email', icon: 'email' },
   { href: 'tel:+919958328345', label: 'Phone', icon: 'phone' },
 ];
 
 export const heroContent = {
-  greeting: "Hello I'm",
-  name: 'SHADAB ALAM',
+  availability: 'Open to backend engineering roles',
+  greeting: "Hello, I'm",
+  name: 'Shadab Alam',
   roles: ['Backend Engineer', 'Go & Python Developer', 'Distributed Systems Builder', 'Product-Minded Engineer'],
+  summary:
+    'I design and ship backend systems that stay correct under load - APIs, event-driven services, and the internal platforms teams depend on every day.',
   summaryPoints: [
     '3+ years building production backend systems in Go and Python.',
     'Focused on APIs, event-driven workflows, and internal platforms that need to stay reliable under scale.',
@@ -30,21 +32,18 @@ export const heroContent = {
   secondaryActionLabel: 'Get In Touch',
 };
 
-export const resumeAsset = createGoogleDriveAsset('https://drive.google.com/file/d/18BKUMCl3JeyyVsl-oCXtR-06_udcEysw/view?usp=drivesdk');
-resumeAsset.firstPagePreviewUrl = resumePreview;
+export const resumeAsset = createGoogleDriveAsset(
+  'https://drive.google.com/file/d/1U7jxgyAmCYZg3Fca-T3ySrZcrYZDvDto/view?usp=drivesdk'
+);
 
-export const resumeCards = [
-  {
-    className: 'resume-page--center',
-    type: 'preview',
-  },
-];
-
+// Counts are maintained by hand: LeetCode's GraphQL API blocks browser
+// (CORS) requests, and Codeforces/StrataScratch expose no usable public
+// endpoint, so there is no reliable way to read these live from the client.
 export const codingProfiles = [
   {
     name: 'LeetCode',
     url: 'https://leetcode.com/u/sha1am/',
-    problemsSolved: 182,
+    problemsSolved: 194,
     totalProblems: 3000,
     color: '#ffa116',
     logoType: 'leetcode'
@@ -86,8 +85,16 @@ export const aboutSection = {
 
 export const skillsSection = {
   eyebrow: 'Skills',
-  title: 'Core technical skills and production experience.',
-  items: ['Go (Golang)', 'Python', 'C++', 'SQL', 'HTML5', 'CSS3', 'Django', 'Gin', 'Pandas', 'NumPy', 'Docker', 'Kubernetes', 'AWS', 'MySQL', 'PostgreSQL', 'MongoDB', 'GraphQL', 'Redis', 'Bash', 'Linux', 'Git', 'Postman'],
+  title: 'The stack I build with',
+  description:
+    'Grouped by where each tool actually sits in the systems I ship, rather than as one flat list.',
+  groups: [
+    { name: 'Languages', items: ['Go', 'Python', 'C++', 'SQL', 'Bash'] },
+    { name: 'Frameworks', items: ['Gin', 'Django', 'GraphQL', 'Pandas', 'NumPy'] },
+    { name: 'Data', items: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Kafka'] },
+    { name: 'Platform', items: ['Docker', 'Kubernetes', 'AWS', 'Airflow', 'Linux'] },
+    { name: 'Tooling', items: ['Git', 'Postman', 'REST APIs', 'Microservices'] },
+  ],
 };
 
 export const projectCards = [
@@ -182,8 +189,8 @@ export const achievementsSection = {
 };
 
 export const contactCards = [
-  { label: 'Email', value: 'shadab.connect17@gmail.com', href: 'mailto:shadab.connect17@gmail.com' },
-  { label: 'GitHub', value: 'github.com/sha1am', href: 'https://github.com/sha1am' },
-  { label: 'LinkedIn', value: 'linkedin.com/in/sha1am', href: 'https://www.linkedin.com/in/sha1am/' },
-  { label: 'Phone', value: '+91-9958328345', href: 'tel:+919958328345' },
+  { label: 'Email', value: 'shadab.connect17@gmail.com', href: 'mailto:shadab.connect17@gmail.com', icon: 'email' },
+  { label: 'Phone', value: '+91 99583 28345', href: 'tel:+919958328345', icon: 'phone' },
+  { label: 'GitHub', value: 'github.com/sha1am', href: 'https://github.com/sha1am', icon: 'github', external: true },
+  { label: 'LinkedIn', value: 'linkedin.com/in/sha1am', href: 'https://www.linkedin.com/in/sha1am/', icon: 'linkedin', external: true },
 ];
