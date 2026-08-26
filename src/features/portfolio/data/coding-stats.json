@@ -1,0 +1,13 @@
+{
+  "updatedAt": "2026-08-26",
+  "platforms": {
+    "leetcode": {
+      "problemsSolved": 194,
+      "source": "manual"
+    },
+    "codeforces": {
+      "problemsSolved": 153,
+      "source": "manual"
+    }
+  }
+}

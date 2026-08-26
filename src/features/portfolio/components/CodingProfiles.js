@@ -1,7 +1,18 @@
 import React from 'react';
 import PlatformLogo from './PlatformLogo';
 
-const CodingProfiles = ({ initialProfiles }) => (
+const formatUpdated = (isoDate) => {
+  const parsed = new Date(`${isoDate}T00:00:00Z`);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed.toLocaleDateString(undefined, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+};
+
+const CodingProfiles = ({ initialProfiles, updatedAt }) => (
   <section className="profiles" aria-labelledby="profiles-title">
     <h2 className="profiles__title" id="profiles-title">
       Coding profiles
@@ -32,6 +43,13 @@ const CodingProfiles = ({ initialProfiles }) => (
         </a>
       ))}
     </div>
+
+    {formatUpdated(updatedAt) && (
+      <p className="profiles__updated">
+        <span className="profiles__updated-dot" aria-hidden="true" />
+        Updated {formatUpdated(updatedAt)}
+      </p>
+    )}
   </section>
 );
 

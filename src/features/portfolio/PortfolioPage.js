@@ -3,6 +3,7 @@ import {
   aboutSection,
   achievementsSection,
   codingProfiles,
+  codingStatsUpdatedAt,
   contactCards,
   experienceCards,
   heroContent,
@@ -43,6 +44,7 @@ const PortfolioPage = () => {
           socialLinks={socialLinks}
           resumeAsset={resumeAsset}
           codingProfiles={codingProfiles}
+          codingStatsUpdatedAt={codingStatsUpdatedAt}
         />
 
         <StatsStrip items={stats} />

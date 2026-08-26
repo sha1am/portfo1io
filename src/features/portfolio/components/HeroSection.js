@@ -30,7 +30,13 @@ const RoleRotator = ({ roles }) => {
   );
 };
 
-const HeroSection = ({ heroContent, socialLinks, resumeAsset, codingProfiles }) => (
+const HeroSection = ({
+  heroContent,
+  socialLinks,
+  resumeAsset,
+  codingProfiles,
+  codingStatsUpdatedAt,
+}) => (
   <section className="hero" aria-labelledby="hero-name">
     <div className="hero__grid">
       <div className="hero__content">
@@ -104,7 +110,10 @@ const HeroSection = ({ heroContent, socialLinks, resumeAsset, codingProfiles }) 
           />
         </figure>
 
-        <CodingProfiles initialProfiles={codingProfiles} />
+        <CodingProfiles
+          initialProfiles={codingProfiles}
+          updatedAt={codingStatsUpdatedAt}
+        />
       </div>
     </div>
 

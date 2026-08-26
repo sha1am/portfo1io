@@ -10,6 +10,8 @@
   "scripts": {
     "start": "webpack serve --mode development",
     "build": "webpack --mode production",
+    "stats": "node scripts/fetch-coding-stats.mjs",
+    "test": "node --test scripts/*.test.mjs",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },

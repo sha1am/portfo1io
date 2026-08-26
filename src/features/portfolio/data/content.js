@@ -1,4 +1,5 @@
 import { createGoogleDriveAsset } from '../../../shared/utils/googleDrive';
+import codingStats from './coding-stats.json';
 
 export const navigationItems = [
   { href: '#about', label: 'About' },
@@ -36,34 +37,47 @@ export const resumeAsset = createGoogleDriveAsset(
   'https://drive.google.com/file/d/1U7jxgyAmCYZg3Fca-T3ySrZcrYZDvDto/view?usp=drivesdk'
 );
 
-// Counts are maintained by hand: LeetCode's GraphQL API blocks browser
-// (CORS) requests, and Codeforces/StrataScratch expose no usable public
-// endpoint, so there is no reliable way to read these live from the client.
+/**
+ * Solved counts come from `coding-stats.json`, which `npm run stats`
+ * refreshes from each platform's API at build time (see
+ * scripts/fetch-coding-stats.mjs for why this cannot run in the browser).
+ * The values below are the fallback used if a platform is unreachable.
+ *
+ * StrataScratch has no public API, so its count stays manual - update it here.
+ */
+const PROFILE_FALLBACKS = {
+  leetcode: 194,
+  codeforces: 153,
+  stratascratch: 25,
+};
+
+const solvedFor = (key) =>
+  codingStats.platforms?.[key]?.problemsSolved ?? PROFILE_FALLBACKS[key];
+
+export const codingStatsUpdatedAt = codingStats.updatedAt;
+
 export const codingProfiles = [
   {
     name: 'LeetCode',
     url: 'https://leetcode.com/u/sha1am/',
-    problemsSolved: 194,
-    totalProblems: 3000,
+    problemsSolved: solvedFor('leetcode'),
     color: '#ffa116',
-    logoType: 'leetcode'
+    logoType: 'leetcode',
   },
   {
     name: 'CodeForces',
     url: 'https://codeforces.com/profile/shalam',
-    problemsSolved: 153,
-    totalProblems: 1000,
+    problemsSolved: solvedFor('codeforces'),
     color: '#29b6f6',
-    logoType: 'codeforces'
+    logoType: 'codeforces',
   },
   {
     name: 'Stratascratch',
     url: 'https://platform.stratascratch.com/user/sha1am',
-    problemsSolved: 25,
-    totalProblems: 500,
+    problemsSolved: PROFILE_FALLBACKS.stratascratch,
     color: '#66bb6a',
-    logoType: 'stratascratch'
-  }
+    logoType: 'stratascratch',
+  },
 ];
 
 export const stats = [

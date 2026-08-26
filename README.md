@@ -21,6 +21,8 @@ Pages.
 - **Content-driven.** All copy, roles, projects and links live in
   `src/features/portfolio/data/content.js` — no JSX edits needed to update the
   site's content.
+- **Self-updating coding stats.** LeetCode and Codeforces solved counts are
+  pulled from each platform's API at build time and refreshed daily by CI.
 
 ## Getting started
 
@@ -53,17 +55,39 @@ src/
 | --- | --- |
 | Résumé link | `resumeAsset` in `data/content.js` (paste any Google Drive share URL) |
 | Experience, projects, skills | the matching export in `data/content.js` |
-| Coding-profile counts | `codingProfiles` in `data/content.js` |
+| Coding-profile counts | automatic — see below |
 | Navigation items | `navigationItems` in `data/content.js` |
 
-### A note on the coding-profile counts
+## Coding-profile counts
 
-These are maintained by hand and deliberately so. LeetCode's GraphQL API sends
-no CORS headers, so a browser request from this site is blocked before it ever
-reaches the server; Codeforces and StrataScratch expose no usable public
-endpoint for solved counts. A previous version of this site shipped a fetch that
-failed on every page load and silently fell back to hardcoded numbers. Fetching
-them live would need a small server-side proxy.
+The LeetCode and Codeforces counts refresh themselves. `scripts/fetch-coding-stats.mjs`
+calls each platform's API and writes `src/features/portfolio/data/coding-stats.json`,
+which the bundle imports.
+
+```bash
+npm run stats     # refresh the counts locally
+npm test          # unit-test the response parsers
+```
+
+**Why this runs at build time rather than in the browser.** LeetCode's GraphQL
+endpoint sends no CORS headers, so a `fetch` from the deployed page is blocked
+before it reaches the server — and it needs a `Referer` header, which browsers
+will not let JavaScript set. An earlier version of this site shipped exactly
+that request; it failed on every page load, logged an error, and fell back to
+hardcoded numbers. From Node there is no such restriction.
+
+The deploy workflow runs on a daily cron (and on demand via *Run workflow* in
+the Actions tab), so the published site is never more than a day stale without
+anyone touching the repo.
+
+**Failure behaviour.** The script never fails the build and never publishes a
+worse number than it started with. If a platform errors, times out, or returns
+a count *lower* than the committed one — which would mean the API changed shape
+or returned partial history — that platform keeps its last known value and the
+build carries on.
+
+**StrataScratch** has no public API, so its count is the one genuinely manual
+number: update `PROFILE_FALLBACKS.stratascratch` in `data/content.js`.
 
 ## Deployment
 

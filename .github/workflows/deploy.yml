@@ -5,6 +5,13 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # Rebuild daily so the coding-profile counts stay current without a commit.
+  # The counts are fetched at build time because LeetCode's API cannot be
+  # called from the browser (no CORS) - see scripts/fetch-coding-stats.mjs.
+  schedule:
+    - cron: '17 3 * * *'
+  # Lets you refresh the counts on demand from the Actions tab.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,7 +20,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -27,17 +34,26 @@ jobs:
           cache: 'npm'
 
       - run: npm ci
+
+      - name: Test stats parsers
+        run: npm test
+
+      - name: Refresh coding-profile counts
+        # Never blocks the deploy: the script keeps the last committed values
+        # if a platform is unreachable and always exits 0.
+        run: npm run stats
+
       - run: npm run build
 
       - name: Upload Pages artifact
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
   deploy:
-    # Only deploy from main; pull requests get the build check above only.
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    # Pull requests get the build and tests only, no deploy.
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     environment:
