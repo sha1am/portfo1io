@@ -24,6 +24,27 @@ Pages.
 - **Self-updating coding stats.** LeetCode and Codeforces solved counts are
   pulled from each platform's API at build time and refreshed daily by CI.
 
+## Easter egg
+
+A small egg sits in the bottom-left corner. Leave the page open for ~22 seconds
+and it hatches into a ship that chases your cursor and shoots at it. Press
+**W A S D** to take the controls, **Space** to fire, **Esc** to dismiss.
+Shots knock headings and chips out of place; they spring back on their own.
+
+It is built to stay out of the way of anyone who is actually here to read the
+site:
+
+- Arrow keys and Space keep scrolling the page until you press WASD to opt into
+  piloting. Hijacking them by default would silently break scrolling.
+- Dismissing it is remembered, so it will not come back on the next visit.
+- It never runs on touch devices, narrow screens, or for visitors with
+  `prefers-reduced-motion: reduce`.
+- The canvas takes no pointer events, so every link stays clickable, and hits
+  displace text with `transform` only - layout can never be disturbed, and every
+  displacement is reverted on a timer and on teardown.
+
+Timings live in `src/features/spaceship/constants.js`.
+
 ## Getting started
 
 ```bash

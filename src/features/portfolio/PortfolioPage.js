@@ -16,6 +16,8 @@ import {
 } from './data/content';
 import { A11Y } from '../../shared/constants';
 import { useReveal } from '../../shared/hooks/useReveal';
+import SpaceshipEasterEgg from '../spaceship/SpaceshipEasterEgg';
+import '../spaceship/spaceship.css';
 import BackToTop from './components/BackToTop';
 import ExperienceTimeline from './components/ExperienceTimeline';
 import HeroSection from './components/HeroSection';
@@ -194,6 +196,7 @@ const PortfolioPage = () => {
 
       <SiteFooter socialLinks={socialLinks} navigationItems={navigationItems} />
       <BackToTop />
+      <SpaceshipEasterEgg />
     </div>
   );
 };

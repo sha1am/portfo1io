@@ -1,0 +1,187 @@
+/* ==========================================================================
+   Easter egg: an egg that hatches into a flyable ship.
+   Everything here is an overlay - nothing takes pointer events except the
+   dismiss button, and nothing affects page layout.
+   ========================================================================== */
+
+.egg {
+  position: fixed;
+  left: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  z-index: 94;
+  width: 26px;
+  height: 34px;
+  pointer-events: none;
+  animation: egg-arrive 700ms var(--ease) both;
+}
+
+@keyframes egg-arrive {
+  from { opacity: 0; transform: translateY(10px) scale(0.7); }
+  to { opacity: 1; transform: none; }
+}
+
+.egg__shell {
+  position: absolute;
+  inset: 0;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: linear-gradient(155deg, #fdf6e6 0%, #e8dcc2 55%, #cdbf9f 100%);
+  box-shadow:
+    inset -3px -4px 8px rgba(120, 100, 60, 0.35),
+    inset 2px 3px 6px rgba(255, 255, 255, 0.75),
+    0 6px 16px -6px rgba(0, 0, 0, 0.6);
+  /* A slow breathing wobble so it reads as alive, not as a stray dot. */
+  animation: egg-wobble 3.4s ease-in-out infinite;
+  transform-origin: 50% 85%;
+}
+
+.egg__shell::after {
+  content: "";
+  position: absolute;
+  inset: 22% 26% 46% 30%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  filter: blur(2px);
+}
+
+@keyframes egg-wobble {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+.egg__crack {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background:
+    linear-gradient(105deg, transparent 46%, rgba(60, 45, 20, 0.75) 47% 49%, transparent 50%),
+    linear-gradient(72deg, transparent 40%, rgba(60, 45, 20, 0.6) 41% 43%, transparent 44%);
+}
+
+/* Hatching: shake harder, split, then blow apart. */
+.egg.is-cracking .egg__shell {
+  animation: egg-shake 160ms linear infinite, egg-burst 1400ms var(--ease) forwards;
+}
+
+.egg.is-cracking .egg__crack {
+  animation: egg-crack-in 1400ms var(--ease) forwards;
+}
+
+@keyframes egg-shake {
+  0%, 100% { transform: translateX(-1.5px) rotate(-5deg); }
+  50% { transform: translateX(1.5px) rotate(5deg); }
+}
+
+@keyframes egg-crack-in {
+  0%, 30% { opacity: 0; }
+  45% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes egg-burst {
+  0%, 70% { scale: 1; opacity: 1; }
+  82% { scale: 1.35; opacity: 1; }
+  100% { scale: 0.2; opacity: 0; }
+}
+
+.spaceship-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 105;
+  /* Critical: the page underneath stays completely clickable. */
+  pointer-events: none;
+}
+
+.spaceship-hud {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(1rem, 3vw, 2rem);
+  z-index: 106;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: 0.5rem 0.5rem 0.5rem 0.9rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--header-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-md);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+  transform: translateX(-50%);
+  animation: hud-in 500ms var(--ease) 300ms both;
+}
+
+@keyframes hud-in {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to { opacity: 1; transform: translateX(-50%); }
+}
+
+.spaceship-hud__keys {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.spaceship-hud__sep {
+  width: 1px;
+  height: 12px;
+  margin: 0 var(--sp-2);
+  background: var(--border-strong);
+}
+
+.spaceship-hud kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-strong);
+}
+
+.spaceship-hud__keys kbd + kbd {
+  margin-left: -1px;
+}
+
+.spaceship-hud__keys kbd:last-of-type {
+  margin-right: 5px;
+}
+
+.spaceship-hud__close {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-pill);
+  color: var(--text-faint);
+  transition: color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+
+.spaceship-hud__close:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* Shots displace text with transform only, so layout can never be disturbed.
+   The engine removes this class (and the variables) on a timer and on teardown. */
+.is-knocked {
+  transform: translate(var(--knock-x, 0), var(--knock-y, 0))
+    rotate(var(--knock-rotate, 0deg));
+  transition: transform 560ms cubic-bezier(0.22, 1.6, 0.4, 1);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .egg,
+  .spaceship-canvas,
+  .spaceship-hud {
+    display: none;
+  }
+}
