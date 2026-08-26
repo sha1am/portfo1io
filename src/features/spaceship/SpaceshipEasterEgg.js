@@ -1,66 +1,54 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import SpaceshipEngine from './engine';
-import { CRACK_DURATION_MS, HATCH_DELAY_MS, STORAGE_KEY } from './constants';
+import { CRACK_DURATION_MS, HATCH_DELAY_MS, HATCH_EVENT } from './constants';
+import { canRunSpaceship, isSnoozed, snooze } from './availability';
 
 const readAccent = () =>
   getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() ||
   '#3ec8d4';
 
-/**
- * Returns false on any visit where the toy would be unwelcome or pointless:
- * a visitor who already dismissed it, someone who asked for reduced motion,
- * a touch device (there is no cursor to chase), or a narrow screen.
- */
-const shouldRun = () => {
-  if (typeof window === 'undefined') return false;
-
-  try {
-    if (window.localStorage.getItem(STORAGE_KEY) === 'dismissed') return false;
-  } catch (error) {
-    /* private mode - fall through and allow it */
-  }
-
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return false;
-  if (window.innerWidth < 900) return false;
-
-  return true;
-};
-
-const PHASES = { IDLE: 'idle', CRACKING: 'cracking', FLYING: 'flying', GONE: 'gone' };
+const PHASES = { DORMANT: 'dormant', WAITING: 'waiting', CRACKING: 'cracking', FLYING: 'flying' };
 
 const SpaceshipEasterEgg = () => {
-  const [phase, setPhase] = useState(PHASES.IDLE);
-  const [enabled, setEnabled] = useState(false);
+  const [phase, setPhase] = useState(PHASES.DORMANT);
+  const [available, setAvailable] = useState(false);
   const [piloted, setPiloted] = useState(false);
 
   const canvasRef = useRef(null);
   const eggRef = useRef(null);
   const engineRef = useRef(null);
 
+  // On a normal visit the egg appears and hatches by itself. If the visitor
+  // recently dismissed it, it stays dormant until they ask for it.
   useEffect(() => {
-    setEnabled(shouldRun());
+    const runnable = canRunSpaceship();
+    setAvailable(runnable);
+    if (runnable && !isSnoozed()) setPhase(PHASES.WAITING);
+  }, []);
+
+  // The footer trigger hatches immediately, from any state, snooze or not.
+  useEffect(() => {
+    const onHatch = () => {
+      setPhase((current) => (current === PHASES.FLYING ? current : PHASES.CRACKING));
+    };
+    window.addEventListener(HATCH_EVENT, onHatch);
+    return () => window.removeEventListener(HATCH_EVENT, onHatch);
   }, []);
 
   const dismiss = useCallback(() => {
     engineRef.current?.destroy();
     engineRef.current = null;
-    setPhase(PHASES.GONE);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, 'dismissed');
-    } catch (error) {
-      /* ignore */
-    }
+    setPiloted(false);
+    setPhase(PHASES.DORMANT);
+    snooze();
   }, []);
 
-  // The egg sits quietly, then cracks.
   useEffect(() => {
-    if (!enabled || phase !== PHASES.IDLE) return undefined;
+    if (phase !== PHASES.WAITING) return undefined;
     const timer = setTimeout(() => setPhase(PHASES.CRACKING), HATCH_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [enabled, phase]);
+  }, [phase]);
 
-  // ...and once cracked, the ship comes out of wherever the egg was sitting.
   useEffect(() => {
     if (phase !== PHASES.CRACKING) return undefined;
     const timer = setTimeout(() => setPhase(PHASES.FLYING), CRACK_DURATION_MS);
@@ -95,11 +83,11 @@ const SpaceshipEasterEgg = () => {
     };
   }, [phase, dismiss]);
 
-  if (!enabled || phase === PHASES.GONE) return null;
+  if (!available || phase === PHASES.DORMANT) return null;
 
   return (
     <>
-      {(phase === PHASES.IDLE || phase === PHASES.CRACKING) && (
+      {(phase === PHASES.WAITING || phase === PHASES.CRACKING) && (
         <div
           ref={eggRef}
           className={`egg${phase === PHASES.CRACKING ? ' is-cracking' : ''}`}

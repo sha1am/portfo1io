@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from './Icon';
+import SpaceshipTrigger from '../../spaceship/SpaceshipTrigger';
 
 const SiteFooter = ({ socialLinks, navigationItems }) => (
   <footer className="site-footer">
@@ -38,7 +39,10 @@ const SiteFooter = ({ socialLinks, navigationItems }) => (
 
     <div className="site-footer__base">
       <p>&copy; {new Date().getFullYear()} Shadab Alam. All rights reserved.</p>
-      <p>Built with React and Webpack.</p>
+      <span className="site-footer__meta">
+        <span>Built with React and Webpack.</span>
+        <SpaceshipTrigger />
+      </span>
     </div>
   </footer>
 );

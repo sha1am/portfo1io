@@ -51,6 +51,8 @@
   /* Colour — dark */
   --bg: #080b10;
   --bg-elevated: #0d131b;
+  --bg-gradient-end: #0d131b;
+  --chip-bg: rgba(255, 255, 255, 0.032);
   --surface: rgba(255, 255, 255, 0.032);
   --surface-hover: rgba(255, 255, 255, 0.055);
   --surface-solid: #101821;
@@ -82,34 +84,83 @@
 [data-theme="light"] {
   color-scheme: light;
 
-  --bg: #f6f8fa;
+  /* The page ground is deliberately a shade darker than the cards. White
+     surfaces on a near-white page have nothing to separate them, which is
+     what made the light theme read as flat. */
+  --bg: #eef1f6;
   --bg-elevated: #ffffff;
+  --bg-gradient-end: #e3e8ef;
   --surface: #ffffff;
-  --surface-hover: #f2f5f8;
+  --surface-hover: #f7f9fc;
   --surface-solid: #ffffff;
-  --border: rgba(15, 32, 46, 0.11);
-  --border-strong: rgba(15, 32, 46, 0.2);
+  --chip-bg: #f1f4f9;
+  --border: rgba(16, 35, 51, 0.12);
+  --border-strong: rgba(16, 35, 51, 0.22);
 
-  --text-strong: #0d1b26;
-  --text: rgba(13, 27, 38, 0.84);
-  --text-muted: rgba(13, 27, 38, 0.58);
-  --text-faint: rgba(13, 27, 38, 0.42);
+  --text-strong: #0b1a24;
+  --text: rgba(11, 26, 36, 0.86);
+  --text-muted: rgba(11, 26, 36, 0.6);
+  --text-faint: rgba(11, 26, 36, 0.45);
 
-  --accent: #0d7e8f;
-  --accent-hover: #0a6272;
-  --accent-soft: rgba(13, 126, 143, 0.1);
-  --accent-line: rgba(13, 126, 143, 0.28);
+  --accent: #0b7385;
+  --accent-hover: #095c6b;
+  --accent-soft: rgba(11, 115, 133, 0.11);
+  --accent-line: rgba(11, 115, 133, 0.3);
   --accent-contrast: #ffffff;
-  --focus: #0d7e8f;
+  --focus: #0b7385;
 
-  --shadow-sm: 0 1px 2px rgba(15, 32, 46, 0.06);
-  --shadow-md: 0 12px 30px -14px rgba(15, 32, 46, 0.24);
-  --shadow-lg: 0 26px 60px -24px rgba(15, 32, 46, 0.3);
+  /* Two-part shadows: a tight contact shadow to seat the element, plus a wide
+     soft one for depth. A single diffuse shadow reads as blur, not elevation. */
+  --shadow-sm: 0 1px 2px rgba(16, 35, 51, 0.07);
+  --shadow-md: 0 2px 4px rgba(16, 35, 51, 0.05), 0 14px 32px -14px rgba(16, 35, 51, 0.3);
+  --shadow-lg: 0 4px 10px rgba(16, 35, 51, 0.06), 0 30px 60px -26px rgba(16, 35, 51, 0.36);
 
-  --header-bg: rgba(246, 248, 250, 0.82);
-  --glow-a: rgba(13, 126, 143, 0.11);
-  --glow-b: rgba(56, 128, 220, 0.08);
-  --grid-line: rgba(15, 32, 46, 0.035);
+  --header-bg: rgba(238, 241, 246, 0.85);
+  --glow-a: rgba(11, 115, 133, 0.14);
+  --glow-b: rgba(56, 128, 220, 0.1);
+  --grid-line: rgba(16, 35, 51, 0.04);
+}
+
+/* Light-theme depth.
+   In dark, a surface separates from the page by being lighter than it. In
+   light that trick is unavailable - white is the ceiling - so the separation
+   has to come from elevation instead. */
+[data-theme="light"] .profiles,
+[data-theme="light"] .stats__grid,
+[data-theme="light"] .timeline__card,
+[data-theme="light"] .project-card,
+[data-theme="light"] .achievement-card,
+[data-theme="light"] .contact-card,
+[data-theme="light"] .site-nav,
+[data-theme="light"] .icon-button,
+[data-theme="light"] .social-link,
+[data-theme="light"] .button--ghost {
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .timeline__card:hover,
+[data-theme="light"] .project-card:hover,
+[data-theme="light"] .achievement-card:hover,
+[data-theme="light"] .contact-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Chips sit inside white cards, so they need their own tint to stay visible. */
+[data-theme="light"] .chip {
+  background: var(--chip-bg);
+}
+
+[data-theme="light"] .chip:hover {
+  background: var(--accent-soft);
+}
+
+/* Hover on a white card cannot go lighter, so tint it toward the accent. */
+[data-theme="light"] .profile-card:hover {
+  background: var(--accent-soft);
+}
+
+[data-theme="light"] .stat:hover {
+  background: var(--chip-bg);
 }
 
 /* ==========================================================================
@@ -130,7 +181,7 @@
   background:
     radial-gradient(60rem 40rem at 12% -8%, var(--glow-a), transparent 62%),
     radial-gradient(52rem 36rem at 92% 6%, var(--glow-b), transparent 60%),
-    linear-gradient(180deg, var(--bg) 0%, var(--bg-elevated) 100%);
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-gradient-end) 100%);
 }
 
 .app-backdrop::after {
@@ -893,7 +944,7 @@
   padding: 0.35rem 0.75rem;
   border-radius: var(--radius-xs);
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: var(--chip-bg);
   font-size: var(--fs-xs);
   font-weight: 500;
   color: var(--text-muted);

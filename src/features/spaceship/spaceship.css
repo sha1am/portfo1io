@@ -185,3 +185,62 @@
     display: none;
   }
 }
+
+/* The way back in, once the egg has already hatched or been dismissed. */
+.egg-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0.25rem 0.6rem 0.25rem 0.45rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-size: var(--fs-xs);
+  color: var(--text-faint);
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+
+.egg-trigger:hover {
+  color: var(--accent);
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+}
+
+.egg-trigger__egg {
+  width: 11px;
+  height: 14px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: linear-gradient(155deg, #fdf6e6 0%, #e3d6ba 60%, #c9ba99 100%);
+  box-shadow: inset -1px -1px 2px rgba(120, 100, 60, 0.4);
+  transition: transform var(--dur) var(--ease);
+}
+
+.egg-trigger:hover .egg-trigger__egg {
+  transform: rotate(-12deg) scale(1.15);
+}
+
+.egg-trigger__label {
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity var(--dur) var(--ease), max-width var(--dur) var(--ease);
+}
+
+.egg-trigger:hover .egg-trigger__label,
+.egg-trigger:focus-visible .egg-trigger__label {
+  opacity: 1;
+  max-width: 4rem;
+}
+
+.site-footer__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .egg-trigger {
+    display: none;
+  }
+}

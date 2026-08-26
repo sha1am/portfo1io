@@ -6,6 +6,16 @@ export const CRACK_DURATION_MS = 1400;
 
 export const STORAGE_KEY = 'portfolio-spaceship';
 
+/**
+ * Dismissing pauses the AUTOMATIC hatch for this long - it never disables the
+ * egg outright. A visitor who is not interested is not pestered on their next
+ * read; the footer trigger still works at any time.
+ */
+export const SNOOZE_DAYS = 7;
+
+/** Fired by the footer trigger to hatch on demand, snooze or not. */
+export const HATCH_EVENT = 'portfolio:hatch-spaceship';
+
 /** Elements a shot can knock around. Transform-only, so layout is never affected. */
 export const TARGET_SELECTOR = [
   '.section__title',

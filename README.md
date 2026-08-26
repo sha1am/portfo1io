@@ -31,12 +31,17 @@ and it hatches into a ship that chases your cursor and shoots at it. Press
 **W A S D** to take the controls, **Space** to fire, **Esc** to dismiss.
 Shots knock headings and chips out of place; they spring back on their own.
 
+To hatch it again at any time, click the small egg in the footer, next to
+"Built with React and Webpack".
+
 It is built to stay out of the way of anyone who is actually here to read the
 site:
 
 - Arrow keys and Space keep scrolling the page until you press WASD to opt into
   piloting. Hijacking them by default would silently break scrolling.
-- Dismissing it is remembered, so it will not come back on the next visit.
+- Dismissing it pauses the *automatic* hatch for 7 days rather than switching
+  it off. The footer trigger keeps working throughout, so there is always a way
+  back in.
 - It never runs on touch devices, narrow screens, or for visitors with
   `prefers-reduced-motion: reduce`.
 - The canvas takes no pointer events, so every link stays clickable, and hits
