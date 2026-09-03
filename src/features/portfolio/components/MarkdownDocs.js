@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import MarkdownIt from 'markdown-it';
 import Icon from './Icon';
 
 const DOC_EXTENSION = '.md';
@@ -97,28 +98,6 @@ const slugifyHeading = (value) =>
     .trim()
     .replace(/\s+/g, '-');
 
-const splitTableRow = (line) =>
-  line
-    .trim()
-    .replace(/^\|/, '')
-    .replace(/\|$/, '')
-    .split('|')
-    .map((cell) => cell.trim());
-
-const isTableDivider = (line = '') => {
-  if (!line.includes('|')) return false;
-  const cells = splitTableRow(line);
-  return cells.length > 0 && cells.every((cell) => /^:?-{3,}:?$/.test(cell));
-};
-
-const isHorizontalRule = (line) =>
-  /^\s*(?:-{3,}|\*{3,}|_{3,})\s*$/.test(line);
-
-const isListLine = (line) => /^(\s*)([-*+]|\d+\.)\s+/.test(line);
-
-const isTableStart = (lines, index) =>
-  lines[index]?.includes('|') && isTableDivider(lines[index + 1]);
-
 const makeDocFinder = (docs) => {
   const byName = new Map(docs.map((doc) => [normalizeDocName(doc.name), doc]));
 
@@ -128,289 +107,191 @@ const makeDocFinder = (docs) => {
   };
 };
 
-const resolveRelativeGitHubUrl = (href, selectedDoc, repository) => {
+const resolveRepositoryPath = (href, selectedDoc, repository) => {
   const trimmedHref = href.replace(/^\.?\//, '');
   const selectedPath = selectedDoc?.path || `${repository.path}/${selectedDoc?.name || ''}`;
   const currentDir = selectedPath.split('/').slice(0, -1).join('/');
-  const path = trimmedHref.startsWith(repository.path)
+  return trimmedHref.startsWith(repository.path)
     ? trimmedHref
     : `${currentDir}/${trimmedHref}`;
-
-  return `https://github.com/${repository.owner}/${repository.name}/blob/${
-    repository.branch
-  }/${encodePathSegment(path)}`;
 };
 
-const renderInline = (text, options, keyPrefix = 'inline') => {
-  const nodes = [];
-  const pattern = /(\[([^\]]+)\]\(([^)]+)\)|`([^`]+)`|\*\*([^*]+)\*\*)/g;
-  let cursor = 0;
-  let match;
+const resolveRelativeGitHubUrl = (href, selectedDoc, repository) =>
+  `https://github.com/${repository.owner}/${repository.name}/blob/${repository.branch}/${encodePathSegment(
+    resolveRepositoryPath(href, selectedDoc, repository)
+  )}`;
 
-  while ((match = pattern.exec(text)) !== null) {
-    if (match.index > cursor) {
-      nodes.push(text.slice(cursor, match.index));
-    }
+const resolveRawUrl = (href, selectedDoc, repository) =>
+  `https://raw.githubusercontent.com/${repository.owner}/${repository.name}/${repository.branch}/${encodePathSegment(
+    resolveRepositoryPath(href, selectedDoc, repository)
+  )}`;
 
-    const key = `${keyPrefix}-${match.index}`;
+// markdown-it handles the whole block structure: headings, lists, fenced code,
+// blockquotes, and native GFM pipe tables (with alignment). The DOM walker
+// below adapts links and images so they resolve against the GitHub repo and
+// the current module index the same way the previous hand-rolled parser did.
+const md = new MarkdownIt({
+  html: false,
+  linkify: true,
+  typographer: false,
+  breaks: false,
+});
 
-    if (match[2] && match[3]) {
-      nodes.push(renderMarkdownLink(match[2], match[3], options, key));
-    } else if (match[4]) {
-      nodes.push(<code key={key}>{match[4]}</code>);
-    } else if (match[5]) {
-      nodes.push(<strong key={key}>{renderInline(match[5], options, key)}</strong>);
-    }
+const isRelativeHref = (href) => !/^(https?:|mailto:|tel:|data:|blob:)/i.test(href);
 
-    cursor = match.index + match[0].length;
-  }
-
-  if (cursor < text.length) {
-    nodes.push(text.slice(cursor));
-  }
-
-  return nodes;
-};
-
-const renderMarkdownLink = (label, href, options, key) => {
+const buildHrefProps = (href, options) => {
   const cleanHref = href.trim().replace(/^<|>$/g, '');
+
+  // Internal-doc link: matches a file in the current module index.
   const doc = options.findDoc(cleanHref);
-
   if (doc) {
-    return (
-      <a
-        key={key}
-        href="#docs"
-        onClick={(event) => {
-          event.preventDefault();
-          options.onSelectDoc(doc);
-        }}
-      >
-        {renderInline(label, options, `${key}-label`)}
-      </a>
-    );
+    return {
+      href: '#docs',
+      onClick: (event) => {
+        event.preventDefault();
+        options.onSelectDoc(doc);
+      },
+    };
   }
 
+  // In-page anchor: scroll to the heading with that id.
   if (cleanHref.startsWith('#')) {
-    const targetId = `docs-${cleanHref.slice(1)}`;
-    return (
-      <a
-        key={key}
-        href={`#${targetId}`}
-        onClick={(event) => {
-          const target = document.getElementById(targetId);
-          if (!target) return;
-          event.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }}
-      >
-        {renderInline(label, options, `${key}-label`)}
-      </a>
-    );
+    return {
+      href: cleanHref,
+      onClick: (event) => {
+        const target =
+          document.getElementById(cleanHref.slice(1)) ||
+          document.getElementById(`docs-${cleanHref.slice(1)}`);
+        if (!target) return;
+        event.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      },
+    };
   }
 
-  const isExternal = /^(https?:|mailto:|tel:)/i.test(cleanHref);
-  const resolvedHref = isExternal
-    ? cleanHref
-    : resolveRelativeGitHubUrl(cleanHref, options.selectedDoc, options.repository);
-
-  return (
-    <a key={key} href={resolvedHref} target="_blank" rel="noreferrer">
-      {renderInline(label, options, `${key}-label`)}
-    </a>
-  );
+  // Everything else resolves against the GitHub repo and opens externally.
+  return {
+    href: isRelativeHref(cleanHref)
+      ? resolveRelativeGitHubUrl(cleanHref, options.selectedDoc, options.repository)
+      : cleanHref,
+    target: '_blank',
+    rel: 'noreferrer',
+  };
 };
 
-const parseMarkdown = (markdown, options) => {
-  const blocks = [];
-  const lines = markdown.replace(/\r\n/g, '\n').split('\n');
-  const headingCounts = new Map();
-  let paragraph = [];
-  let index = 0;
+// Convert markdown-it's HTML output into React elements. Walking the DOM (rather
+// than dangerouslySetInnerHTML) keeps the reader's clickable doc links, in-page
+// anchors, heading ids and task checkboxes.
+const htmlToReact = (html, options) => {
+  const headingIds = new Map();
 
-  const nextKey = () => `md-${blocks.length}`;
-
-  const getHeadingId = (text) => {
-    const base = slugifyHeading(text) || `section-${blocks.length}`;
-    const count = (headingCounts.get(base) || 0) + 1;
-    headingCounts.set(base, count);
-    return `docs-${count === 1 ? base : `${base}-${count}`}`;
+  const assignHeadingId = (text) => {
+    const base = slugifyHeading(text) || 'section';
+    const count = (headingIds.get(base) || 0) + 1;
+    headingIds.set(base, count);
+    return count === 1 ? base : `${base}-${count}`;
   };
 
-  const flushParagraph = () => {
-    if (paragraph.length === 0) return;
-    const text = paragraph.join(' ').trim();
-    if (text) {
-      blocks.push(<p key={nextKey()}>{renderInline(text, options, nextKey())}</p>);
-    }
-    paragraph = [];
-  };
+  const walk = (node) => {
+    if (node.nodeType === Node.TEXT_NODE) return node.nodeValue;
+    if (node.nodeType !== Node.ELEMENT_NODE) return null;
 
-  while (index < lines.length) {
-    const line = lines[index];
-    const trimmed = line.trim();
+    const tag = node.tagName.toLowerCase();
+    const props = {};
 
-    if (!trimmed) {
-      flushParagraph();
-      index += 1;
-      continue;
-    }
-
-    const fenceMatch = line.match(/^```(\S*)\s*$/);
-    if (fenceMatch) {
-      flushParagraph();
-      const language = fenceMatch[1];
-      const code = [];
-      index += 1;
-
-      while (index < lines.length && !/^```\s*$/.test(lines[index])) {
-        code.push(lines[index]);
-        index += 1;
-      }
-
-      if (index < lines.length) index += 1;
-
-      blocks.push(
-        <figure className="markdown-body__code" key={nextKey()}>
-          {language && <figcaption>{language}</figcaption>}
-          <pre>
-            <code>{code.join('\n')}</code>
-          </pre>
-        </figure>
-      );
-      continue;
-    }
-
-    const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
-    if (headingMatch) {
-      flushParagraph();
-      const level = headingMatch[1].length;
-      const Heading = `h${Math.min(level + 3, 6)}`;
-      const headingText = headingMatch[2].replace(/\s+#+\s*$/, '').trim();
-
-      blocks.push(
-        <Heading
-          className={`markdown-body__heading markdown-body__heading--${level}`}
-          id={getHeadingId(headingText)}
-          key={nextKey()}
-        >
-          {renderInline(headingText, options, nextKey())}
-        </Heading>
-      );
-      index += 1;
-      continue;
-    }
-
-    if (isHorizontalRule(line)) {
-      flushParagraph();
-      blocks.push(<hr key={nextKey()} />);
-      index += 1;
-      continue;
-    }
-
-    if (isTableStart(lines, index)) {
-      flushParagraph();
-      const header = splitTableRow(lines[index]);
-      const rows = [];
-      index += 2;
-
-      while (index < lines.length && lines[index].trim() && lines[index].includes('|')) {
-        rows.push(splitTableRow(lines[index]));
-        index += 1;
-      }
-
-      blocks.push(
-        <div className="markdown-body__table-wrap" key={nextKey()}>
-          <table>
-            <thead>
-              <tr>
-                {header.map((cell, cellIndex) => (
-                  <th key={`${cell}-${cellIndex}`}>
-                    {renderInline(cell, options, `${nextKey()}-th-${cellIndex}`)}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, rowIndex) => (
-                <tr key={`${nextKey()}-row-${rowIndex}`}>
-                  {header.map((_, cellIndex) => (
-                    <td key={`${rowIndex}-${cellIndex}`}>
-                      {renderInline(
-                        row[cellIndex] || '',
-                        options,
-                        `${nextKey()}-td-${rowIndex}-${cellIndex}`
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      );
-      continue;
-    }
-
-    if (/^>\s?/.test(line)) {
-      flushParagraph();
-      const quote = [];
-
-      while (index < lines.length && /^>\s?/.test(lines[index])) {
-        quote.push(lines[index].replace(/^>\s?/, ''));
-        index += 1;
-      }
-
-      blocks.push(
-        <blockquote key={nextKey()}>
-          {quote.map((quoteLine, quoteIndex) => (
-            <p key={`${quoteLine}-${quoteIndex}`}>
-              {renderInline(quoteLine, options, `${nextKey()}-quote-${quoteIndex}`)}
-            </p>
-          ))}
-        </blockquote>
-      );
-      continue;
-    }
-
-    if (isListLine(line)) {
-      flushParagraph();
-      const firstMatch = line.match(/^(\s*)([-*+]|\d+\.)\s+(.+)$/);
-      const ordered = /^\d+\./.test(firstMatch[2]);
-      const ListTag = ordered ? 'ol' : 'ul';
-      const items = [];
-
-      while (index < lines.length && isListLine(lines[index])) {
-        const itemMatch = lines[index].match(/^(\s*)([-*+]|\d+\.)\s+(.+)$/);
-        const depth = Math.min(
-          4,
-          Math.floor(itemMatch[1].replace(/\t/g, '  ').length / 2)
+    for (const attr of Array.from(node.attributes)) {
+      if (attr.name === 'class') {
+        props.className = attr.value;
+      } else if (attr.name === 'style') {
+        props.style = Object.fromEntries(
+          attr.value.split(';').filter(Boolean).map((decl) => {
+            const [key, value] = decl.split(':');
+            const camel = key.trim().replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+            return [camel, value.trim()];
+          })
         );
-        items.push({ depth, text: itemMatch[3] });
-        index += 1;
+      } else {
+        props[attr.name] = attr.value;
       }
-
-      blocks.push(
-        <ListTag key={nextKey()}>
-          {items.map((item, itemIndex) => (
-            <li
-              key={`${item.text}-${itemIndex}`}
-              style={{ '--list-depth': item.depth }}
-            >
-              {renderInline(item.text, options, `${nextKey()}-li-${itemIndex}`)}
-            </li>
-          ))}
-        </ListTag>
-      );
-      continue;
     }
 
-    paragraph.push(trimmed);
-    index += 1;
-  }
+    if (/^h[1-6]$/.test(tag)) {
+      props.id = assignHeadingId(node.textContent || '');
+      props.className = `${props.className || ''} markdown-body__heading`.trim();
+    }
 
-  flushParagraph();
-  return blocks;
+    if (tag === 'pre') {
+      props.className = `${props.className || ''} markdown-body__code`.trim();
+    }
+
+    if (tag === 'img') {
+      const src = props.src || '';
+      props.src = isRelativeHref(src)
+        ? resolveRawUrl(src, options.selectedDoc, options.repository)
+        : src;
+      props.loading = 'lazy';
+      props.className = `${props.className || ''} markdown-body__img`.trim();
+    }
+
+    const children = Array.from(node.childNodes)
+      .map(walk)
+      .filter((child) => child !== null && child !== '');
+
+    if (tag === 'a') {
+      const { href, onClick } = buildHrefProps(props.href || '', options);
+      const anchorProps = { key: `${props.href}-${children.length}` };
+      if (href !== undefined) anchorProps.href = href;
+      if (onClick) anchorProps.onClick = onClick;
+      if (props.className) anchorProps.className = props.className;
+      if (href === props.href || !href) {
+        if (props.target) anchorProps.target = props.target;
+        if (props.rel) anchorProps.rel = props.rel;
+      }
+      return React.createElement('a', anchorProps, ...children);
+    }
+
+    if (tag === 'li') {
+      const first = children[0];
+      if (typeof first === 'string') {
+        const match = first.match(/^\[([ xX])\]\s+/);
+        if (match) {
+          const rest = first.slice(match[0].length);
+          const checkbox = React.createElement('input', {
+            type: 'checkbox',
+            checked: /[xX]/.test(match[1]),
+            disabled: true,
+            readOnly: true,
+            className: 'markdown-body__checkbox',
+            'aria-label': 'task',
+          });
+          props.className = `${props.className || ''} task-list-item`.trim();
+          return React.createElement('li', props, checkbox, rest, ...children.slice(1));
+        }
+      }
+      return React.createElement('li', props, ...children);
+    }
+
+    if (tag === 'table') {
+      const table = React.createElement('table', props, ...children);
+      return React.createElement('div', {
+        className: 'markdown-body__table-wrap',
+      }, table);
+    }
+
+    return React.createElement(tag, props, ...children);
+  };
+
+  const body = new DOMParser().parseFromString(html, 'text/html').body;
+  return Array.from(body.childNodes)
+    .map(walk)
+    .filter((child) => child !== null && child !== '');
+};
+
+const renderMarkdown = (markdown, options) => {
+  // Normalise `! [alt](url)` (space after the bang) which markdown-it would
+  // otherwise treat as literal text.
+  const html = md.render(markdown.replace(/! ?\[/g, '!['));
+  return htmlToReact(html, options);
 };
 
 const MarkdownDocs = ({ section, onReadingChange }) => {
@@ -497,7 +378,7 @@ const MarkdownDocs = ({ section, onReadingChange }) => {
 
   const renderedMarkdown = useMemo(() => {
     if (markdownState.status !== 'ready') return null;
-    return parseMarkdown(markdownState.content, {
+    return renderMarkdown(markdownState.content, {
       docs,
       findDoc,
       onSelectDoc: setSelectedDoc,

@@ -1617,45 +1617,48 @@
   color: var(--text-muted);
 }
 
+/* markdown-it emits native, nested <ul>/<ol>. Keep default list semantics but
+   tighten spacing and add task-list checkbox styling. */
 .markdown-body ul,
 .markdown-body ol {
   display: grid;
-  gap: var(--sp-2);
+  gap: var(--sp-1);
+  margin: var(--sp-2) 0;
+  padding-left: 1.5rem;
   color: var(--text-muted);
 }
 
-.markdown-body ol {
-  counter-reset: markdown-list;
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ul,
+.markdown-body ol ol {
+  margin-top: var(--sp-1);
 }
 
-.markdown-body li {
-  position: relative;
-  padding-left: 1.4rem;
-  margin-left: calc(var(--list-depth, 0) * 1rem);
-}
-
-.markdown-body ul li::before {
-  content: "";
-  position: absolute;
-  top: 0.68em;
-  left: 0.35rem;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-.markdown-body ol li {
-  counter-increment: markdown-list;
-}
-
-.markdown-body ol li::before {
-  content: counter(markdown-list) ".";
-  position: absolute;
-  top: 0;
-  left: 0;
+.markdown-body li::marker {
   color: var(--accent);
-  font-weight: 700;
+}
+
+.markdown-body .task-list-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--sp-2);
+  align-items: start;
+  list-style: none;
+}
+
+.markdown-body .task-list-item::marker {
+  content: none;
+}
+
+.markdown-body .markdown-body__checkbox {
+  margin-top: 0.25em;
+  accent-color: var(--accent);
+}
+
+.markdown-body .task-list-item ul,
+.markdown-body .task-list-item ol {
+  grid-column: 1 / -1;
 }
 
 .markdown-body blockquote {
@@ -1895,7 +1898,7 @@
 
 .docs-document-view__header {
   position: sticky;
-  top: var(--header-h);
+  top: calc(var(--header-h) - 2px);
   z-index: 20;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -2000,8 +2003,7 @@
 }
 
 .docs-document-view .markdown-body p,
-.docs-document-view .markdown-body ul,
-.docs-document-view .markdown-body ol,
+.docs-document-view .markdown-body__list,
 .docs-document-view .markdown-body blockquote,
 .docs-document-view .markdown-body__heading {
   max-width: 82ch;
@@ -2436,7 +2438,7 @@
   }
 
   .docs-document-view__header {
-    top: var(--header-h);
+    top: calc(var(--header-h) - 2px);
   }
 }
 
