@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useId, useRef, useState, useMemo } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { A11Y, HEADER_OFFSET, THEME } from '../../../shared/constants';
 import { useTheme } from '../../../shared/hooks/useTheme';
 import { useScrollState } from '../../../shared/hooks/useScrollState';
@@ -36,12 +37,27 @@ const SiteHeader = ({ navigationItems }) => {
   const menuId = useId();
   const toggleRef = useRef(null);
   const panelRef = useRef(null);
+  const location = useLocation();
 
-  const sectionIds = navigationItems.map((item) => item.href.replace('#', ''));
+  const sectionIds = useMemo(() => 
+    navigationItems
+      .filter((item) => !item.href.startsWith('/'))
+      .map((item) => item.href.replace('#', '')),
+    [navigationItems]
+  );
+  
   const activeId = useActiveSection(sectionIds, HEADER_OFFSET);
 
   const nextTheme = theme === THEME.DARK ? THEME.LIGHT : THEME.DARK;
   const closeMenu = useCallback(() => setIsMenuOpen(false), []);
+  const topHref = `${location.pathname}${location.search}#top`;
+
+  const handleTopClick = useCallback(() => {
+    closeMenu();
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }, [closeMenu]);
 
   // Lock body scroll and trap Escape while the mobile menu is open.
   useEffect(() => {
@@ -88,8 +104,29 @@ const SiteHeader = ({ navigationItems }) => {
 
   const renderLinks = (className) =>
     navigationItems.map((item) => {
-      const id = item.href.replace('#', '');
-      const isActive = id === activeId;
+      const isRouteLink = item.href.startsWith('/');
+      const id = isRouteLink ? item.href.replace('/', '') : item.href.replace('#', '');
+      const isActive = isRouteLink
+        ? item.href === '/'
+          ? location.pathname === '/'
+          : location.pathname === item.href ||
+            location.pathname.startsWith(`${item.href}/`)
+        : id === activeId;
+      
+      if (isRouteLink) {
+        return (
+          <Link
+            key={item.href}
+            className={className}
+            to={item.href}
+            onClick={closeMenu}
+            aria-current={isActive ? 'true' : undefined}
+          >
+            {item.label}
+          </Link>
+        );
+      }
+      
       return (
         <a
           key={item.href}
@@ -112,7 +149,12 @@ const SiteHeader = ({ navigationItems }) => {
       />
 
       <div className="site-header__inner">
-        <a className="brand" href="#top" aria-label={A11Y.LABELS.GO_TO_TOP}>
+        <Link
+          className="brand"
+          to={topHref}
+          onClick={handleTopClick}
+          aria-label={A11Y.LABELS.GO_TO_TOP}
+        >
           <span className="brand-mark" aria-hidden="true">
             SA
           </span>
@@ -120,7 +162,7 @@ const SiteHeader = ({ navigationItems }) => {
             <span className="brand-name">Shadab Alam</span>
             <span className="brand-role">Backend Engineer</span>
           </span>
-        </a>
+        </Link>
 
         <nav className="site-nav" aria-label={A11Y.LABELS.PRIMARY_NAV}>
           {renderLinks('site-nav__link')}

@@ -4,6 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <script>
+    (function () {
+      var repo = 'portfo1io';
+      var parts = window.location.pathname.split('/');
+      var onProjectPages = window.location.hostname.endsWith('github.io') && parts[1] === repo;
+      var base = onProjectPages ? '/' + repo + '/' : '/';
+      document.write('<base href="' + base + '">');
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var location = window.location;
+      if (location.search.length > 1 && location.search[1] === '/') {
+        var decodedPath = location.search
+          .slice(1)
+          .split('&')
+          .map(function (segment) {
+            return segment.replace(/~and~/g, '&');
+          })
+          .join('?');
+
+        window.history.replaceState(
+          null,
+          '',
+          location.pathname.replace(/\/$/, '') + decodedPath + location.hash
+        );
+      }
+    })();
+  </script>
+
   <title>Shadab Alam | Backend Engineer</title>
   <meta name="description" content="Shadab Alam is a backend engineer building scalable Go and Python systems - APIs, event-driven services, and internal platforms with measurable product impact.">
   <meta name="author" content="Shadab Alam">

@@ -19,8 +19,10 @@ export const useActiveSection = (sectionIds, offset = 96) => {
     if (elements.length === 0) return undefined;
 
     let frame = null;
+    let isMounted = true;
 
     const measure = () => {
+      if (!isMounted) return;
       frame = null;
 
       const reachedBottom =
@@ -49,6 +51,7 @@ export const useActiveSection = (sectionIds, offset = 96) => {
     window.addEventListener('resize', onScroll);
 
     return () => {
+      isMounted = false;
       if (frame !== null) window.cancelAnimationFrame(frame);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);

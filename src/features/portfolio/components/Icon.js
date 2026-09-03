@@ -39,6 +39,7 @@ const paths = {
     ),
   },
   arrowUp: { node: <path d="M12 19.5v-15M5.5 11 12 4.5 18.5 11" /> },
+  arrowLeft: { node: <path d="M19.5 12h-15M11 5.5 4.5 12l6.5 6.5" /> },
   arrowRight: { node: <path d="M4.5 12h15M13 5.5l6.5 6.5L13 18.5" /> },
   briefcase: {
     node: (

@@ -10,8 +10,10 @@ export const useScrollState = (threshold = 24) => {
 
   useEffect(() => {
     let frame = null;
+    let isMounted = true;
 
     const measure = () => {
+      if (!isMounted) return;
       frame = null;
       const scrollTop = window.scrollY;
       const scrollable =
@@ -31,6 +33,7 @@ export const useScrollState = (threshold = 24) => {
     window.addEventListener('resize', onScroll);
 
     return () => {
+      isMounted = false;
       if (frame !== null) window.cancelAnimationFrame(frame);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting...</title>
+  <script>
+    (function () {
+      var repo = 'portfo1io';
+      var location = window.location;
+      var parts = location.pathname.split('/');
+      var keepSegments = location.hostname.endsWith('github.io') && parts[1] === repo ? 1 : 0;
+      var basePath = parts.slice(0, keepSegments + 1).join('/') || '/';
+      var routePath = parts
+        .slice(keepSegments + 1)
+        .join('/')
+        .replace(/&/g, '~and~');
+      var query = location.search
+        ? '&' + location.search.slice(1).replace(/&/g, '~and~')
+        : '';
+
+      location.replace(
+        location.protocol +
+          '//' +
+          location.hostname +
+          (location.port ? ':' + location.port : '') +
+          basePath.replace(/\/$/, '') +
+          '/?/' +
+          routePath +
+          query +
+          location.hash
+      );
+    })();
+  </script>
+</head>
+<body>
+  Redirecting...
+</body>
+</html>

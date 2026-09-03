@@ -8,6 +8,12 @@ export const navigationItems = [
   { href: '#projects', label: 'Projects' },
   { href: '#achievements', label: 'Achievements' },
   { href: '#contact', label: 'Contact' },
+  { href: '/docs', label: 'Docs' },
+];
+
+export const docsNavigationItems = [
+  { href: '/', label: 'Home' },
+  { href: '/docs', label: 'Docs' },
 ];
 
 export const socialLinks = [
@@ -136,6 +142,147 @@ export const projectCards = [
     summary: 'Cinematic portfolio with 3D resume interactions, hover-to-expand functionality, and smooth animations built with React and modern CSS.',
   },
 ];
+
+export const docsRepositories = [
+  {
+    id: 'algorithm',
+    name: 'FinalGrind / Algorithms-S-CLRS',
+    eyebrow: 'Docs',
+    title: 'Algorithms notes, readable from the portfolio.',
+    description:
+      'A GitHub-backed reader for my Skiena + CLRS study archive, with module search and formatted Markdown preview.',
+    repository: {
+      owner: 'sha1am',
+      name: 'finalGrind',
+      branch: 'master',
+      path: 'Algorithms-S-CLRS',
+      url: 'https://github.com/sha1am/finalGrind/tree/master/Algorithms-S-CLRS',
+      apiUrl:
+        'https://api.github.com/repos/sha1am/finalGrind/contents/Algorithms-S-CLRS?ref=master',
+      rawBaseUrl:
+        'https://raw.githubusercontent.com/sha1am/finalGrind/master/Algorithms-S-CLRS',
+      blobBaseUrl:
+        'https://github.com/sha1am/finalGrind/blob/master/Algorithms-S-CLRS',
+    },
+    files: [
+      {
+        name: 'README.md',
+        title: 'Archive Overview',
+        category: 'Start',
+        summary: 'Scope, refinement status, sources, and C++ conventions.',
+      },
+      {
+        name: 'INDEX.md',
+        title: 'Study Index',
+        category: 'Map',
+        summary: 'Module map, CLRS-Skiena crosswalk, and revision order.',
+      },
+      {
+        name: 'M01-foundations.md',
+        title: 'Foundations of Algorithm Design',
+        category: 'Foundations',
+        summary: 'Correctness, loop invariants, and algorithm design basics.',
+      },
+      {
+        name: 'M02-asymptotics.md',
+        title: 'Asymptotics and the Analysis Toolkit',
+        category: 'Foundations',
+        summary: 'Growth rates, notation, summations, and analysis habits.',
+      },
+      {
+        name: 'M03-divide-conquer.md',
+        title: 'Divide and Conquer and Recurrences',
+        category: 'Foundations',
+        summary: 'Recursive design, recurrence solving, and master theorem use.',
+      },
+      {
+        name: 'M04-randomization.md',
+        title: 'Randomization and Probabilistic Analysis',
+        category: 'Foundations',
+        summary: 'Indicator variables, randomized algorithms, and expected cost.',
+      },
+      {
+        name: 'M05-sorting.md',
+        title: 'Sorting and Order Statistics',
+        category: 'Data structures',
+        summary: 'Comparison sorting, linear-time sorting, heaps, and selection.',
+      },
+      {
+        name: 'M06-elementary-ds.md',
+        title: 'Elementary Data Structures',
+        category: 'Data structures',
+        summary: 'Arrays, lists, stacks, queues, and representation tradeoffs.',
+      },
+      {
+        name: 'M07-hashing.md',
+        title: 'Hashing',
+        category: 'Data structures',
+        summary: 'Hash tables, collision strategies, and expected performance.',
+      },
+      {
+        name: 'M08-search-trees.md',
+        title: 'Search Trees and Augmentation',
+        category: 'Data structures',
+        summary: 'BSTs, balanced trees, B-trees, and augmented structures.',
+      },
+      {
+        name: 'M09amortized.md',
+        title: 'Amortized Analysis',
+        category: 'Analysis',
+        summary: 'Aggregate, accounting, and potential-method analysis.',
+      },
+      {
+        name: 'M10unionfind.md',
+        title: 'Disjoint Sets / Union-Find',
+        category: 'Data structures',
+        summary: 'Make-set, find, union, path compression, and union by rank.',
+      },
+      {
+        name: 'M11dynamicprogramming.md',
+        title: 'Dynamic Programming',
+        category: 'Design techniques',
+        summary: 'State design, recurrence choice, reconstruction, and patterns.',
+      },
+      {
+        name: 'M12greedy.md',
+        title: 'Greedy Algorithms',
+        category: 'Design techniques',
+        summary: 'Greedy-choice proofs, exchange arguments, and canonical uses.',
+      },
+      {
+        name: 'M13graphstraversal.md',
+        title: 'Graph Representation and Traversal',
+        category: 'Graphs',
+        summary: 'Graph storage, BFS, DFS, topological sort, and SCCs.',
+      },
+      {
+        name: 'M14mst.md',
+        title: 'Minimum Spanning Trees',
+        category: 'Graphs',
+        summary: 'Kruskal, Prim, cut properties, and implementation details.',
+      },
+      {
+        name: 'M15shortestpaths.md',
+        title: 'Shortest Paths',
+        category: 'Graphs',
+        summary: 'Bellman-Ford, Dijkstra, DAG paths, and all-pairs paths.',
+      },
+    ],
+  },
+  // Add more repositories here in the future
+  // {
+  //   id: 'another-repo',
+  //   name: 'Another Repository',
+  //   eyebrow: 'Docs',
+  //   title: 'Another documentation set',
+  //   description: 'Description of this documentation set.',
+  //   repository: { ... },
+  //   files: [ ... ],
+  // },
+];
+
+// Keep the old structure for backward compatibility, but use the first repo
+export const algorithmDocsSection = docsRepositories[0];
 
 export const experienceCards = [
   {

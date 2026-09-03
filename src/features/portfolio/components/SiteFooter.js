@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Icon from './Icon';
 import SpaceshipTrigger from '../../spaceship/SpaceshipTrigger';
 
@@ -16,11 +17,21 @@ const SiteFooter = ({ socialLinks, navigationItems }) => (
       </div>
 
       <nav className="site-footer__nav" aria-label="Footer navigation">
-        {navigationItems.map((item) => (
-          <a key={item.href} href={item.href}>
-            {item.label}
-          </a>
-        ))}
+        {navigationItems.map((item) => {
+          const isRouteLink = item.href.startsWith('/');
+          if (isRouteLink) {
+            return (
+              <Link key={item.href} to={item.href}>
+                {item.label}
+              </Link>
+            );
+          }
+          return (
+            <a key={item.href} href={item.href}>
+              {item.label}
+            </a>
+          );
+        })}
       </nav>
 
       <div className="site-footer__social">
