@@ -9,6 +9,10 @@
   --font-display: "Sora", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --font-body: "Inter", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+  /* The docs reader is set in ONE plain newspaper serif. Hierarchy comes from
+     size and weight, not a second display face. --font-body stays the sans used
+     for kickers, captions and table headers, which is the only contrast needed. */
+  --font-serif: "Source Serif 4", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
 
   /* Type scale */
   --fs-xs: 0.75rem;
@@ -75,6 +79,16 @@
   --shadow-md: 0 12px 32px -12px rgba(0, 0, 0, 0.7);
   --shadow-lg: 0 28px 64px -20px rgba(0, 0, 0, 0.8);
 
+  /* Syntax colours, tuned against --surface-solid and kept in the same family
+     as the teal accent so highlighted C\+\+ reads as part of the page. */
+  --syntax-comment: rgba(233, 240, 245, 0.42);
+  --syntax-keyword: #f6a5c0;
+  --syntax-string: #a5e0a0;
+  --syntax-number: #f3c78c;
+  --syntax-type: #7fd4e8;
+  --syntax-function: #a3c4ff;
+  --syntax-meta: #c8abf7;
+
   --header-bg: rgba(8, 11, 16, 0.78);
   --glow-a: rgba(62, 200, 212, 0.16);
   --glow-b: rgba(56, 128, 220, 0.12);
@@ -115,6 +129,15 @@
   --shadow-md: 0 2px 4px rgba(16, 35, 51, 0.05), 0 14px 32px -14px rgba(16, 35, 51, 0.3);
   --shadow-lg: 0 4px 10px rgba(16, 35, 51, 0.06), 0 30px 60px -26px rgba(16, 35, 51, 0.36);
 
+  /* Same roles, darkened for a white ground - every one clears 4.5:1 on #fff. */
+  --syntax-comment: rgba(11, 26, 36, 0.5);
+  --syntax-keyword: #b3245f;
+  --syntax-string: #1a6b36;
+  --syntax-number: #8a4f00;
+  --syntax-type: #0b7385;
+  --syntax-function: #2a55b8;
+  --syntax-meta: #6a3ba0;
+
   --header-bg: rgba(238, 241, 246, 0.85);
   --glow-a: rgba(11, 115, 133, 0.14);
   --glow-b: rgba(56, 128, 220, 0.1);
@@ -131,10 +154,9 @@
 [data-theme="light"] .project-card,
 [data-theme="light"] .achievement-card,
 [data-theme="light"] .contact-card,
-[data-theme="light"] .docs-browser__nav,
-[data-theme="light"] .doc-viewer,
 [data-theme="light"] .docs-file-list,
 [data-theme="light"] .docs-file-item,
+[data-theme="light"] .markdown-body__code,
 [data-theme="light"] .docs-document-view__header,
 [data-theme="light"] .docs-search input,
 [data-theme="light"] .site-nav,
@@ -1209,45 +1231,36 @@
 
 /* ==========================================================================
    Markdown docs reader
+
+   The reader is set as a newspaper: a Didone headline face (Playfair Display)
+   over a text serif built for screens (Source Serif 4), with the site's sans
+   reserved for kickers, captions and table headers. That three-voice contrast
+   is what makes a wall of study notes scan like an article instead of a dump.
    ========================================================================== */
-
-.docs-browser {
-  display: grid;
-  gap: var(--sp-4);
-}
-
-.docs-browser__toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-4);
-  align-items: end;
-  justify-content: space-between;
-}
 
 .docs-search {
   display: grid;
-  flex: 1 1 280px;
-  max-width: 420px;
   gap: var(--sp-2);
+  min-width: min(280px, 100%);
 }
 
 .docs-search span {
   font-size: var(--fs-xs);
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-faint);
 }
 
 .docs-search input {
-  width: 100%;
   min-height: 44px;
   padding: 0 var(--sp-4);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--text-strong);
-  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+  font: inherit;
+  font-size: var(--fs-sm);
 }
 
 .docs-search input::placeholder {
@@ -1256,193 +1269,8 @@
 
 .docs-search input:focus {
   border-color: var(--accent-line);
-  background: var(--surface-hover);
   outline: none;
-}
-
-.docs-browser__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-3);
-  align-items: center;
-}
-
-.docs-browser__source {
-  font-size: var(--fs-xs);
-  color: var(--text-faint);
-}
-
-.docs-browser__grid {
-  display: grid;
-  grid-template-columns: minmax(280px, 0.36fr) minmax(0, 1fr);
-  gap: var(--sp-4);
-  align-items: start;
-}
-
-.docs-browser__nav,
-.doc-viewer {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  overflow: hidden;
-}
-
-.docs-browser__nav {
-  position: sticky;
-  top: calc(var(--header-h) + 1rem);
-  display: flex;
-  flex-direction: column;
-  max-height: min(78vh, 760px);
-}
-
-.docs-browser__nav-head {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--sp-3);
-  padding: var(--sp-4);
-  border-bottom: 1px solid var(--border);
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-faint);
-}
-
-.docs-list {
-  display: grid;
-  gap: var(--sp-2);
-  overflow: auto;
-  padding: var(--sp-2);
-}
-
-.docs-list__item {
-  display: grid;
-  grid-template-columns: 36px minmax(0, 1fr);
-  width: 100%;
-  gap: var(--sp-3);
-  padding: var(--sp-3);
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  text-align: left;
-  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
-    transform var(--dur-fast) var(--ease);
-}
-
-.docs-list__item:hover {
-  transform: translateX(2px);
-  border-color: var(--border);
-  background: var(--surface-hover);
-}
-
-.docs-list__item.is-active {
-  border-color: var(--accent-line);
-  background: var(--accent-soft);
-}
-
-.docs-list__icon {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  background: var(--surface-hover);
-  color: var(--accent);
-}
-
-.docs-list__icon .icon {
-  width: 17px;
-  height: 17px;
-}
-
-.docs-list__body {
-  display: grid;
-  gap: 3px;
-  min-width: 0;
-}
-
-.docs-list__category {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.docs-list__body strong {
-  color: var(--text-strong);
-  font-size: var(--fs-sm);
-  line-height: 1.25;
-  overflow-wrap: anywhere;
-}
-
-.docs-list__body span:last-child {
-  color: var(--text-muted);
-  font-size: var(--fs-xs);
-  line-height: 1.45;
-}
-
-.docs-browser__empty {
-  padding: var(--sp-5);
-  color: var(--text-muted);
-  font-size: var(--fs-sm);
-}
-
-.doc-viewer {
-  min-width: 0;
-}
-
-.doc-viewer__header {
-  padding: var(--sp-5);
-  border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--surface-hover) 70%, transparent);
-}
-
-.doc-viewer__kicker {
-  margin-bottom: var(--sp-2);
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.doc-viewer__header h3 {
-  color: var(--text-strong);
-  font-size: var(--fs-2xl);
-}
-
-.doc-viewer__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-3);
-  align-items: center;
-  margin-top: var(--sp-3);
-  color: var(--text-faint);
-  font-size: var(--fs-xs);
-}
-
-.doc-viewer__meta span,
-.doc-viewer__meta a {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-}
-
-.doc-viewer__meta a {
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.doc-viewer__meta .icon {
-  width: 13px;
-  height: 13px;
-}
-
-.doc-viewer__body {
-  max-height: min(78vh, 760px);
-  overflow: auto;
-  padding: var(--sp-6);
-  scroll-behavior: smooth;
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .docs-state {
@@ -1479,45 +1307,193 @@
   color: var(--text-faint);
 }
 
+/* --------------------------------------------------------------------------
+   Reader layout: article column plus a sticky contents rail
+   -------------------------------------------------------------------------- */
+
+/* One column for everything, sized by the measure, with the contents rail
+   beside it and the pair centred on the full-width page. Prose, tables and code
+   therefore share BOTH edges - nothing hangs into the margin. */
+.docs-reader {
+  --md-measure: min(90ch, 60rem);
+
+  display: grid;
+  grid-template-columns: minmax(0, var(--md-measure)) 17rem;
+  justify-content: center;
+  gap: var(--sp-6) var(--sp-8);
+  align-items: start;
+}
+
+.docs-toc {
+  position: sticky;
+  top: calc(var(--header-h) + var(--docs-header-h, 118px) + var(--sp-4));
+  grid-column: 2;
+  grid-row: 1;
+  max-height: calc(100vh - var(--header-h) - var(--docs-header-h, 118px) - var(--sp-8));
+  padding-left: var(--sp-5);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.docs-toc__title {
+  margin-bottom: var(--sp-3);
+  color: var(--text-faint);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.docs-toc__list {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.docs-toc__item a {
+  display: block;
+  padding: 0.3rem 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.docs-toc__item--3 a {
+  padding-left: var(--sp-3);
+  color: var(--text-faint);
+  font-size: 0.78rem;
+}
+
+.docs-toc__item a:hover {
+  color: var(--accent);
+}
+
+.docs-toc__item.is-active a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   The article itself
+   -------------------------------------------------------------------------- */
+
 .markdown-body {
   display: grid;
-  max-width: 78ch;
-  margin: 0 auto;
+  grid-column: 1;
+  grid-row: 1;
   gap: var(--sp-4);
   color: var(--text);
-  font-size: var(--fs-sm);
+  font-family: var(--font-serif);
+  font-size: clamp(1.0625rem, 0.28vw + 1rem, 1.1875rem);
+  font-weight: 400;
+  line-height: 1.75;
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: oldstyle-nums proportional-nums;
 }
 
 .markdown-body > * {
   min-width: 0;
 }
 
+.markdown-body p {
+  margin: 0;
+  color: var(--text);
+  hanging-punctuation: first last;
+}
+
+/* The lede: first substantial paragraph of the piece, set larger and opened
+   with a drop cap. Tagged in the renderer, not guessed at with :first-of-type,
+   because most of these notes open on a bold "Sources:" line instead. */
+.markdown-body__lede {
+  font-size: 1.1em;
+  line-height: 1.68;
+  color: var(--text);
+}
+
+.markdown-body__lede::first-letter {
+  float: left;
+  margin: 0.06em 0.08em -0.06em 0;
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: 3.5em;
+  font-weight: 800;
+  line-height: 0.8;
+}
+
+/* --------------------------------------------------------------------------
+   Headings: three distinct voices
+   -------------------------------------------------------------------------- */
+
 .markdown-body__heading {
   color: var(--text-strong);
-  scroll-margin-top: calc(var(--header-h) + 1rem);
+  scroll-margin-top: calc(var(--header-h) + var(--docs-header-h, 118px) + var(--sp-5));
+  text-wrap: balance;
 }
 
+/* Masthead headline */
 .markdown-body__heading--1 {
-  margin-top: var(--sp-2);
-  font-size: var(--fs-2xl);
+  margin: var(--sp-2) 0 var(--sp-3);
+  padding-bottom: var(--sp-4);
+  /* The classic newspaper double rule. 3px `double` collapses to a single
+     hairline at this colour; 4px gives the two strokes room to read. */
+  border-bottom: 4px double var(--text-faint);
+  font-family: var(--font-serif);
+  font-size: clamp(1.95rem, 1.3vw + 1.5rem, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  line-height: 1.12;
+  text-align: center;
 }
 
+/* Section head, opened by a hairline rule */
 .markdown-body__heading--2 {
-  margin-top: var(--sp-5);
-  font-size: var(--fs-xl);
+  margin-top: var(--sp-7);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--border);
+  font-family: var(--font-serif);
+  font-size: clamp(1.45rem, 0.6vw + 1.25rem, 1.8rem);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  line-height: 1.25;
 }
 
-.markdown-body__heading--3,
+/* A rule directly above a section head would double up with the head's own. */
+.markdown-body hr + .markdown-body__heading--2 {
+  margin-top: var(--sp-2);
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* Subhead, in the text face so it sits inside the article rather than above it */
+.markdown-body__heading--3 {
+  margin-top: var(--sp-5);
+  font-family: var(--font-serif);
+  font-size: 1.24em;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+/* Run-in label, in the sans for contrast */
 .markdown-body__heading--4,
 .markdown-body__heading--5,
 .markdown-body__heading--6 {
   margin-top: var(--sp-4);
-  font-size: var(--fs-lg);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-transform: uppercase;
 }
 
-.markdown-body p {
-  color: var(--text-muted);
-}
+/* --------------------------------------------------------------------------
+   Inline
+   -------------------------------------------------------------------------- */
 
 .markdown-body a {
   color: var(--accent);
@@ -1525,23 +1501,42 @@
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
+  text-decoration-color: var(--accent-line);
+  transition: text-decoration-color var(--dur-fast) var(--ease);
+}
+
+.markdown-body a:hover {
+  text-decoration-color: var(--accent);
 }
 
 .markdown-body strong {
   color: var(--text-strong);
+  font-weight: 700;
+}
+
+.markdown-body em {
+  font-style: italic;
 }
 
 .markdown-body code {
-  padding: 0.12rem 0.32rem;
+  padding: 0.1rem 0.3rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-xs);
   background: var(--chip-bg);
   color: var(--text-strong);
   font-family: var(--font-mono);
-  font-size: 0.86em;
+  font-size: 0.82em;
+  font-style: normal;
+  font-variant-numeric: normal;
+  overflow-wrap: break-word;
 }
 
+/* --------------------------------------------------------------------------
+   Fenced code
+   -------------------------------------------------------------------------- */
+
 .markdown-body__code {
+  margin: var(--sp-3) 0;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -1552,91 +1547,191 @@
   padding: var(--sp-2) var(--sp-4);
   border-bottom: 1px solid var(--border);
   color: var(--text-faint);
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs);
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-.markdown-body pre {
+.markdown-body__pre {
   overflow-x: auto;
   margin: 0;
-  padding: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
   color: var(--text);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  line-height: 1.55;
+  font-size: 0.82rem;
+  font-variant-numeric: normal;
+  line-height: 1.65;
+  tab-size: 2;
 }
 
-.markdown-body pre code {
+.markdown-body__pre code {
   display: block;
   padding: 0;
   border: 0;
   background: transparent;
   color: inherit;
+  font-size: inherit;
   white-space: pre;
 }
 
+/* highlight.js tokens, mapped onto the site's own palette so C++ reads as part
+   of the page rather than a pasted-in theme. */
+.markdown-body .hljs-comment,
+.markdown-body .hljs-quote {
+  color: var(--syntax-comment);
+  font-style: italic;
+}
+
+.markdown-body .hljs-keyword,
+.markdown-body .hljs-operator {
+  color: var(--syntax-keyword);
+}
+
+.markdown-body .hljs-string,
+.markdown-body .hljs-char,
+.markdown-body .hljs-meta .hljs-string {
+  color: var(--syntax-string);
+}
+
+.markdown-body .hljs-number,
+.markdown-body .hljs-literal {
+  color: var(--syntax-number);
+}
+
+.markdown-body .hljs-type,
+.markdown-body .hljs-built_in,
+.markdown-body .hljs-title.class_ {
+  color: var(--syntax-type);
+}
+
+.markdown-body .hljs-title,
+.markdown-body .hljs-title.function_ {
+  color: var(--syntax-function);
+}
+
+.markdown-body .hljs-meta,
+.markdown-body .hljs-meta .hljs-keyword {
+  color: var(--syntax-meta);
+}
+
+.markdown-body .hljs-params,
+.markdown-body .hljs-variable {
+  color: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   Tables: newspaper rules, not boxes. 1700+ rows live in these notes, so they
+   have to stay quiet and legible at length.
+   -------------------------------------------------------------------------- */
+
 .markdown-body__table-wrap {
-  overflow: auto;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  margin: var(--sp-3) 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.markdown-body__table-wrap:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
 }
 
 .markdown-body table {
   width: 100%;
-  min-width: 560px;
+  min-width: 34rem;
   border-collapse: collapse;
-  font-size: var(--fs-xs);
-}
-
-.markdown-body th,
-.markdown-body td {
-  padding: 0.7rem 0.85rem;
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-
-.markdown-body th:last-child,
-.markdown-body td:last-child {
-  border-right: 0;
-}
-
-.markdown-body tr:last-child td {
-  border-bottom: 0;
+  border-top: 2px solid var(--border-strong);
+  border-bottom: 2px solid var(--border-strong);
+  font-size: 0.92em;
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: 1.55;
 }
 
 .markdown-body th {
-  background: var(--surface-hover);
-  color: var(--text-strong);
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--border-strong);
+  color: var(--text-faint);
+  font-family: var(--font-body);
+  font-size: 0.68rem;
   font-weight: 700;
+  letter-spacing: 0.1em;
   text-align: left;
+  text-transform: uppercase;
+  vertical-align: bottom;
+  white-space: nowrap;
 }
 
 .markdown-body td {
-  color: var(--text-muted);
+  padding: 0.68rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: top;
 }
 
-/* markdown-it emits native, nested <ul>/<ol>. Keep default list semantics but
-   tighten spacing and add task-list checkbox styling. */
+.markdown-body tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.markdown-body tbody tr:hover td {
+  background: var(--chip-bg);
+}
+
+.markdown-body td strong {
+  color: var(--text-strong);
+}
+
+/* --------------------------------------------------------------------------
+   Lists
+   -------------------------------------------------------------------------- */
+
+/* global.css resets `ul, ol { list-style: none }` for the site chrome, so the
+   reader has to put markers back explicitly - without this the notes' bullets
+   and, worse, their ordered-list NUMBERS silently vanish and the items read as
+   unexplained indentation.
+   Plain block layout, not `display: grid`: an outside ::marker on a grid item
+   is a corner the browsers disagree about, and li margins do the same job. */
 .markdown-body ul,
 .markdown-body ol {
-  display: grid;
-  gap: var(--sp-1);
-  margin: var(--sp-2) 0;
+  margin: 0;
   padding-left: 1.5rem;
-  color: var(--text-muted);
+  color: var(--text);
+  list-style-position: outside;
 }
 
-.markdown-body ul ul,
-.markdown-body ul ol,
-.markdown-body ol ul,
-.markdown-body ol ol {
-  margin-top: var(--sp-1);
+.markdown-body ul {
+  list-style-type: disc;
+}
+
+.markdown-body ul ul {
+  list-style-type: circle;
+}
+
+.markdown-body ul ul ul {
+  list-style-type: square;
+}
+
+/* Wider, because two-digit markers ("10.") otherwise hang into the margin. */
+.markdown-body ol {
+  padding-left: 1.9rem;
+  list-style-type: decimal;
+}
+
+.markdown-body li + li,
+.markdown-body li > ul,
+.markdown-body li > ol {
+  margin-top: var(--sp-2);
 }
 
 .markdown-body li::marker {
   color: var(--accent);
+  font-size: 0.9em;
+}
+
+.markdown-body ol > li::marker {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.78em;
 }
 
 .markdown-body .task-list-item {
@@ -1652,7 +1747,7 @@
 }
 
 .markdown-body .markdown-body__checkbox {
-  margin-top: 0.25em;
+  margin-top: 0.35em;
   accent-color: var(--accent);
 }
 
@@ -1661,22 +1756,77 @@
   grid-column: 1 / -1;
 }
 
+/* --------------------------------------------------------------------------
+   Quotations. Nearly every blockquote in these notes is lifted from Skiena or
+   CLRS, so they are set as quotations: italic text face, hanging quote mark,
+   a rule in the margin.
+   -------------------------------------------------------------------------- */
+
 .markdown-body blockquote {
-  padding: var(--sp-4);
-  border-left: 3px solid var(--accent-line);
-  border-radius: var(--radius-sm);
-  background: var(--accent-soft);
+  position: relative;
+  margin: var(--sp-3) 0;
+  padding: var(--sp-1) 0 var(--sp-1) var(--sp-5);
+  border-left: 2px solid var(--accent-line);
+  color: var(--text);
+  font-style: italic;
+}
+
+.markdown-body blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.15em;
+  left: 0.28em;
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-style: normal;
+  line-height: 1;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.markdown-body blockquote p {
+  color: inherit;
 }
 
 .markdown-body blockquote p + p {
-  margin-top: var(--sp-2);
+  margin-top: var(--sp-3);
 }
+
+.markdown-body blockquote code,
+.markdown-body blockquote strong {
+  font-style: normal;
+}
+
+.markdown-body blockquote ul,
+.markdown-body blockquote ol {
+  color: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   Section break: a tapered rule rather than a hard line
+   -------------------------------------------------------------------------- */
 
 .markdown-body hr {
   width: 100%;
   height: 1px;
+  margin: var(--sp-4) 0;
   border: 0;
-  background: var(--border);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--border-strong) 22%,
+    var(--border-strong) 78%,
+    transparent
+  );
+}
+
+.markdown-body__img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: var(--sp-3) auto;
+  border-radius: var(--radius-md);
 }
 
 /* ==========================================================================
@@ -1688,8 +1838,6 @@
 }
 
 .docs-page__masthead {
-  max-width: var(--container);
-  margin: 0 auto;
   padding: clamp(3rem, 7vw, 5rem) clamp(1rem, 4vw, 2rem) var(--sp-6);
 }
 
@@ -1701,9 +1849,9 @@
   display: none;
 }
 
+/* The reader runs the full page width on purpose - the docs page is a reading
+   surface, not a marketing column, and the notes carry wide tables and code. */
 .docs-page__workspace {
-  max-width: min(1480px, 100%);
-  margin: 0 auto;
   padding: 0 clamp(1rem, 4vw, 2rem) var(--section-gap);
 }
 
@@ -1746,7 +1894,9 @@
 
 .docs-file-manager__viewport {
   width: 100%;
-  overflow: hidden;
+  /* clip, not hidden. overflow:hidden makes this a scroll container, which
+     silently kills position:sticky on the reader header nested inside it. */
+  overflow: clip;
 }
 
 .docs-file-manager__slider {
@@ -1996,22 +2146,8 @@
   min-height: 55vh;
 }
 
-.docs-document-view .markdown-body {
-  max-width: min(1120px, 100%);
-  margin: 0 auto;
-  font-size: var(--fs-md);
-}
-
-.docs-document-view .markdown-body p,
-.docs-document-view .markdown-body__list,
-.docs-document-view .markdown-body blockquote,
-.docs-document-view .markdown-body__heading {
-  max-width: 82ch;
-}
-
-.docs-document-view .markdown-body__code,
-.docs-document-view .markdown-body__table-wrap {
-  width: 100%;
+.docs-document-view .docs-reader {
+  max-width: 100%;
 }
 
 /* ==========================================================================
@@ -2354,22 +2490,25 @@
     max-width: none;
   }
 
-  .docs-browser__grid {
+  /* The contents rail runs out of room here; fold it above the article as a
+     compact scrolling block instead of dropping it. */
+  .docs-reader {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .docs-browser__nav {
+  .docs-toc {
     position: static;
-    max-height: none;
+    grid-column: 1;
+    grid-row: 1;
+    max-height: 12rem;
+    padding: var(--sp-4) var(--sp-5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
   }
 
-  .docs-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    max-height: 360px;
-  }
-
-  .doc-viewer__body {
-    max-height: none;
+  .markdown-body {
+    grid-row: 2;
   }
 
   .docs-page__workspace {
@@ -2418,10 +2557,6 @@
   .skill-group {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--sp-3);
-  }
-
-  .docs-browser__toolbar {
-    align-items: stretch;
   }
 
   .docs-search {
@@ -2492,22 +2627,16 @@
     justify-content: center;
   }
 
-  .docs-browser__actions {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .docs-list {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .doc-viewer__header,
-  .doc-viewer__body {
-    padding: var(--sp-4);
+  .docs-reader {
+    --md-measure: 100%;
   }
 
   .markdown-body table {
-    min-width: 480px;
+    min-width: 30rem;
+  }
+
+  .markdown-body__lede::first-letter {
+    font-size: 3em;
   }
 
   .docs-page__masthead {

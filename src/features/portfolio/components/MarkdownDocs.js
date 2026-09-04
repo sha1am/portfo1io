@@ -1,8 +1,37 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MarkdownIt from 'markdown-it';
+import hljs from 'highlight.js/lib/core';
+import cpp from 'highlight.js/lib/languages/cpp';
 import Icon from './Icon';
+import { useActiveSection } from '../../../shared/hooks/useActiveSection';
+
+// Only the cpp grammar is registered. The notes' 683 unlabelled fences are
+// CLRS-style pseudocode, not a real language, and stay plain monospace.
+hljs.registerLanguage('cpp', cpp);
 
 const DOC_EXTENSION = '.md';
+
+const HIGHLIGHT_ALIASES = {
+  c: 'cpp',
+  cc: 'cpp',
+  cpp: 'cpp',
+  'c++': 'cpp',
+  h: 'cpp',
+  hpp: 'cpp',
+};
+
+const LANGUAGE_LABELS = { cpp: 'C++' };
+
+// Anchor targets sit below both the site header and the reader's own sticky
+// header, whose measured height lands in --docs-header-h.
+const SCROLL_OFFSET_FALLBACK = 214;
+
+// The line the contents rail uses to decide which heading is current. Same
+// constraint as HEADER_OFFSET on the main nav: it must stay GREATER than the
+// headings' scroll-margin-top (72px site header + ~118px reader header + 24px),
+// or clicking an entry parks its heading just below the line and highlights the
+// previous one instead.
+const TOC_ACTIVE_OFFSET = 240;
 
 const decodeSafe = (value) => {
   try {
@@ -89,21 +118,30 @@ const mergeRemoteDocs = (entries, section, fallbackDocs) => {
     .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
 };
 
+/**
+ * Reproduces GitHub's heading-anchor algorithm, because the anchors in these
+ * notes were written against GitHub: lowercase, drop everything that is not a
+ * letter, number, space, hyphen or underscore, then turn EACH remaining space
+ * into one hyphen.
+ *
+ * The "each" matters. A heading like "Insert & Delete" loses the ampersand and
+ * keeps both surrounding spaces, so GitHub's id is `insert--delete` with two
+ * hyphens. Collapsing whitespace here (or mapping & to "and") produced ids that
+ * none of the docs' own table-of-contents links could reach.
+ */
 const slugifyHeading = (value) =>
   value
-    .replace(/`([^`]+)`/g, '$1')
-    .toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/[^\w\s-]/g, '')
     .trim()
-    .replace(/\s+/g, '-');
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s_-]+/gu, '')
+    .replace(/\s/g, '-');
 
 const makeDocFinder = (docs) => {
   const byName = new Map(docs.map((doc) => [normalizeDocName(doc.name), doc]));
 
   return (href) => {
     const name = normalizeDocName(href);
-    return name ? byName.get(name) : null;
+    return name ? byName.get(name) || null : null;
   };
 };
 
@@ -129,42 +167,73 @@ const resolveRawUrl = (href, selectedDoc, repository) =>
 // markdown-it handles the whole block structure: headings, lists, fenced code,
 // blockquotes, and native GFM pipe tables (with alignment). The DOM walker
 // below adapts links and images so they resolve against the GitHub repo and
-// the current module index the same way the previous hand-rolled parser did.
+// the current module index.
 const md = new MarkdownIt({
   html: false,
   linkify: true,
-  typographer: false,
+  typographer: true,
   breaks: false,
+  highlight: (code, lang) => {
+    const language = HIGHLIGHT_ALIASES[(lang || '').trim().toLowerCase()];
+    if (!language) return '';
+    try {
+      return hljs.highlight(code, { language, ignoreIllegals: true }).value;
+    } catch {
+      // Returning '' makes markdown-it escape and emit the source unchanged.
+      return '';
+    }
+  },
 });
 
-const isRelativeHref = (href) => !/^(https?:|mailto:|tel:|data:|blob:)/i.test(href);
+// typographer is on for the curly quotes and true em dashes the serif setting
+// wants, but its `replacements` rule also rewrites (c) as a copyright sign and
+// mangles the ASCII arrows and +- used throughout these notes.
+md.disable('replacements');
+
+const isRelativeHref = (href) => !/^(https?:|mailto:|tel:|data:|blob:|#)/i.test(href);
+
+const splitHash = (href) => {
+  const index = href.indexOf('#');
+  return index === -1
+    ? { path: href, hash: '' }
+    : { path: href.slice(0, index), hash: href.slice(index + 1) };
+};
 
 const buildHrefProps = (href, options) => {
   const cleanHref = href.trim().replace(/^<|>$/g, '');
 
-  // Internal-doc link: matches a file in the current module index.
-  const doc = options.findDoc(cleanHref);
-  if (doc) {
-    return {
-      href: '#docs',
-      onClick: (event) => {
-        event.preventDefault();
-        options.onSelectDoc(doc);
-      },
-    };
+  // Internal-doc link: a relative path matching a file in the module index.
+  // The relative test matters - without it an external URL that happens to end
+  // in the same filename would be swallowed and opened as a local document.
+  if (isRelativeHref(cleanHref)) {
+    const { hash } = splitHash(cleanHref);
+    const doc = options.findDoc(cleanHref);
+    if (doc) {
+      return {
+        // A real URL, not a '#' placeholder: the click handler keeps the
+        // reader in-app, but cmd-click, middle-click and "copy link address"
+        // then land on the same document on GitHub instead of nowhere.
+        href: doc.htmlUrl
+          ? `${doc.htmlUrl}${hash ? `#${hash}` : ''}`
+          : resolveRelativeGitHubUrl(cleanHref, options.selectedDoc, options.repository),
+        onClick: (event) => {
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+          event.preventDefault();
+          options.onSelectDoc(doc, hash);
+        },
+      };
+    }
   }
 
-  // In-page anchor: scroll to the heading with that id.
+  // In-page anchor: scroll to the heading carrying that id.
   if (cleanHref.startsWith('#')) {
     return {
       href: cleanHref,
       onClick: (event) => {
-        const target =
-          document.getElementById(cleanHref.slice(1)) ||
-          document.getElementById(`docs-${cleanHref.slice(1)}`);
-        if (!target) return;
+        const id = decodeSafe(cleanHref.slice(1));
+        if (!document.getElementById(id)) return;
         event.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        options.onGoToAnchor(id);
       },
     };
   }
@@ -179,17 +248,45 @@ const buildHrefProps = (href, options) => {
   };
 };
 
-// Convert markdown-it's HTML output into React elements. Walking the DOM (rather
-// than dangerouslySetInnerHTML) keeps the reader's clickable doc links, in-page
-// anchors, heading ids and task checkboxes.
-const htmlToReact = (html, options) => {
-  const headingIds = new Map();
+/**
+ * Mark the paragraph that should carry the drop cap.
+ *
+ * Not simply the first one: most of these notes open on a metadata line
+ * ("**Sources:** CLRS Ch. 1 ...") that a drop cap would look absurd on. The
+ * lede is the first top-level paragraph that begins with ordinary prose and is
+ * long enough to wrap around a three-line initial.
+ */
+const LEDE_MIN_LENGTH = 180;
 
+const tagLede = (body) => {
+  const lede = Array.from(body.children).find((element) => {
+    if (element.tagName !== 'P') return false;
+    const first = element.firstChild;
+    if (!first || first.nodeType !== Node.TEXT_NODE) return false;
+    if (!/^[\p{L}]/u.test(first.nodeValue.trimStart())) return false;
+    return (element.textContent || '').trim().length >= LEDE_MIN_LENGTH;
+  });
+
+  if (lede) lede.classList.add('markdown-body__lede');
+};
+
+/**
+ * Convert markdown-it's HTML into React elements. Walking the DOM (rather than
+ * dangerouslySetInnerHTML) keeps the reader's clickable doc links, in-page
+ * anchors, heading ids and task checkboxes, and lets us collect the heading
+ * outline for the contents rail in the same pass.
+ */
+const htmlToReact = (html, options) => {
+  const headings = [];
+  const usedIds = new Map();
+  let keySeed = 0;
+
+  // GitHub's duplicate suffix starts at -1 for the SECOND occurrence.
   const assignHeadingId = (text) => {
     const base = slugifyHeading(text) || 'section';
-    const count = (headingIds.get(base) || 0) + 1;
-    headingIds.set(base, count);
-    return count === 1 ? base : `${base}-${count}`;
+    const seen = usedIds.get(base) || 0;
+    usedIds.set(base, seen + 1);
+    return seen === 0 ? base : `${base}-${seen}`;
   };
 
   const walk = (node) => {
@@ -197,7 +294,7 @@ const htmlToReact = (html, options) => {
     if (node.nodeType !== Node.ELEMENT_NODE) return null;
 
     const tag = node.tagName.toLowerCase();
-    const props = {};
+    const props = { key: `n${(keySeed += 1)}` };
 
     for (const attr of Array.from(node.attributes)) {
       if (attr.name === 'class') {
@@ -215,13 +312,16 @@ const htmlToReact = (html, options) => {
       }
     }
 
-    if (/^h[1-6]$/.test(tag)) {
-      props.id = assignHeadingId(node.textContent || '');
-      props.className = `${props.className || ''} markdown-body__heading`.trim();
-    }
-
-    if (tag === 'pre') {
-      props.className = `${props.className || ''} markdown-body__code`.trim();
+    const headingMatch = tag.match(/^h([1-6])$/);
+    if (headingMatch) {
+      const level = Number(headingMatch[1]);
+      const text = (node.textContent || '').trim();
+      props.id = assignHeadingId(text);
+      props.className =
+        `${props.className || ''} markdown-body__heading markdown-body__heading--${level}`.trim();
+      if (level >= 2 && level <= 3 && text) {
+        headings.push({ id: props.id, level, text });
+      }
     }
 
     if (tag === 'img') {
@@ -238,59 +338,104 @@ const htmlToReact = (html, options) => {
       .filter((child) => child !== null && child !== '');
 
     if (tag === 'a') {
-      const { href, onClick } = buildHrefProps(props.href || '', options);
-      const anchorProps = { key: `${props.href}-${children.length}` };
-      if (href !== undefined) anchorProps.href = href;
+      const { href, onClick, target, rel } = buildHrefProps(props.href || '', options);
+      const anchorProps = { key: props.key, href };
       if (onClick) anchorProps.onClick = onClick;
       if (props.className) anchorProps.className = props.className;
-      if (href === props.href || !href) {
-        if (props.target) anchorProps.target = props.target;
-        if (props.rel) anchorProps.rel = props.rel;
-      }
+      if (target) anchorProps.target = target;
+      if (rel) anchorProps.rel = rel;
       return React.createElement('a', anchorProps, ...children);
     }
 
+    // Fenced code: frame it as a figure so a language caption can sit above the
+    // scrolling <pre> without being dragged sideways with it.
+    if (tag === 'pre') {
+      const codeEl = node.querySelector('code');
+      const langMatch = (codeEl?.getAttribute('class') || '').match(/language-([\w+#.-]+)/);
+      const rawLang = langMatch ? langMatch[1].toLowerCase() : '';
+      const label = LANGUAGE_LABELS[HIGHLIGHT_ALIASES[rawLang]] || '';
+
+      props.className = `${props.className || ''} markdown-body__pre`.trim();
+      const pre = React.createElement('pre', props, ...children);
+
+      return React.createElement(
+        'figure',
+        { key: `f${props.key}`, className: 'markdown-body__code' },
+        label
+          ? React.createElement('figcaption', { key: 'cap' }, label)
+          : null,
+        pre
+      );
+    }
+
+    // markdown-it does not implement GFM task lists, so the "[ ] " marker
+    // arrives as literal text - directly in the <li> for a tight list, or
+    // inside a leading <p> for a loose one. Handle both.
     if (tag === 'li') {
       const first = children[0];
-      if (typeof first === 'string') {
-        const match = first.match(/^\[([ xX])\]\s+/);
-        if (match) {
-          const rest = first.slice(match[0].length);
-          const checkbox = React.createElement('input', {
-            type: 'checkbox',
-            checked: /[xX]/.test(match[1]),
-            disabled: true,
-            readOnly: true,
-            className: 'markdown-body__checkbox',
-            'aria-label': 'task',
-          });
-          props.className = `${props.className || ''} task-list-item`.trim();
-          return React.createElement('li', props, checkbox, rest, ...children.slice(1));
-        }
+      const leadText =
+        typeof first === 'string'
+          ? first
+          : React.isValidElement(first) &&
+              first.type === 'p' &&
+              typeof first.props.children?.[0] === 'string'
+            ? first.props.children[0]
+            : null;
+
+      const match = leadText?.match(/^\[([ xX])\]\s+/);
+      if (match) {
+        const checkbox = React.createElement('input', {
+          key: 'box',
+          type: 'checkbox',
+          checked: /[xX]/.test(match[1]),
+          disabled: true,
+          readOnly: true,
+          className: 'markdown-body__checkbox',
+          'aria-label': 'task',
+        });
+        const rest = leadText.slice(match[0].length);
+        const tail =
+          typeof first === 'string'
+            ? [rest, ...children.slice(1)]
+            : [
+                React.cloneElement(first, undefined, rest, ...React.Children.toArray(
+                  first.props.children
+                ).slice(1)),
+                ...children.slice(1),
+              ];
+        props.className = `${props.className || ''} task-list-item`.trim();
+        return React.createElement('li', props, checkbox, ...tail);
       }
       return React.createElement('li', props, ...children);
     }
 
     if (tag === 'table') {
       const table = React.createElement('table', props, ...children);
-      return React.createElement('div', {
-        className: 'markdown-body__table-wrap',
-      }, table);
+      return React.createElement(
+        'div',
+        { key: `w${props.key}`, className: 'markdown-body__table-wrap', tabIndex: 0 },
+        table
+      );
     }
 
     return React.createElement(tag, props, ...children);
   };
 
   const body = new DOMParser().parseFromString(html, 'text/html').body;
-  return Array.from(body.childNodes)
+  tagLede(body);
+
+  const nodes = Array.from(body.childNodes)
     .map(walk)
     .filter((child) => child !== null && child !== '');
+
+  return { nodes, headings };
 };
 
 const renderMarkdown = (markdown, options) => {
-  // Normalise `! [alt](url)` (space after the bang) which markdown-it would
-  // otherwise treat as literal text.
-  const html = md.render(markdown.replace(/! ?\[/g, '!['));
+  // Normalise `! [alt](url)` (a stray space after the bang), which markdown-it
+  // would otherwise leave as literal text. Anchored on the closing `](` so it
+  // cannot touch ordinary prose such as "n! [see note]".
+  const html = md.render(markdown.replace(/!\s\[([^\]\n]*)\]\(/g, '![$1]('));
   return htmlToReact(html, options);
 };
 
@@ -298,6 +443,7 @@ const MarkdownDocs = ({ section, onReadingChange }) => {
   const fallbackDocs = useMemo(() => buildFallbackDocs(section), [section]);
   const [docs, setDocs] = useState(fallbackDocs);
   const [selectedDoc, setSelectedDoc] = useState(null);
+  const [pendingAnchor, setPendingAnchor] = useState(null);
   const [query, setQuery] = useState('');
   const [sourceState, setSourceState] = useState('fallback');
   const [markdownState, setMarkdownState] = useState({
@@ -305,12 +451,51 @@ const MarkdownDocs = ({ section, onReadingChange }) => {
     content: '',
     error: null,
   });
-  const contentRef = useRef(null);
+  const rootRef = useRef(null);
+  const headerRef = useRef(null);
 
   useEffect(() => {
     onReadingChange?.(Boolean(selectedDoc));
     return () => onReadingChange?.(false);
   }, [onReadingChange, selectedDoc]);
+
+  // Publish the sticky reader header's real height so anchor scroll-margin and
+  // the contents rail can both clear it without a hard-coded guess.
+  useEffect(() => {
+    const header = headerRef.current;
+    const root = rootRef.current;
+    if (!header || !root || typeof ResizeObserver === 'undefined') return undefined;
+
+    // offsetHeight, not contentRect.height: the header has 16px of vertical
+    // padding and a 1px border, and anchors have to clear the whole box.
+    const observer = new ResizeObserver(() => {
+      root.style.setProperty('--docs-header-h', `${header.offsetHeight}px`);
+    });
+
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, [selectedDoc]);
+
+  const scrollToAnchor = useCallback((id) => {
+    const target = document.getElementById(id);
+    if (!target) return false;
+
+    const offset =
+      Number.parseFloat(
+        getComputedStyle(target).scrollMarginTop
+      ) || SCROLL_OFFSET_FALLBACK;
+
+    window.scrollTo({
+      top: window.scrollY + target.getBoundingClientRect().top - offset,
+      behavior: 'smooth',
+    });
+
+    // Keep the anchor addressable and focusable without stealing focus styling.
+    if (window.history?.replaceState) {
+      window.history.replaceState(null, '', `#${id}`);
+    }
+    return true;
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -349,8 +534,8 @@ const MarkdownDocs = ({ section, onReadingChange }) => {
     const controller = new AbortController();
 
     setMarkdownState({ status: 'loading', content: '', error: null });
-    contentRef.current?.scrollTo({ top: 0 });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Jump, don't glide: a smooth scroll here races the content swap.
+    window.scrollTo({ top: 0, behavior: 'auto' });
 
     fetch(selectedDoc.downloadUrl, { signal: controller.signal })
       .then((response) => {
@@ -376,16 +561,44 @@ const MarkdownDocs = ({ section, onReadingChange }) => {
 
   const findDoc = useMemo(() => makeDocFinder(docs), [docs]);
 
-  const renderedMarkdown = useMemo(() => {
-    if (markdownState.status !== 'ready') return null;
+  const handleSelectDoc = useCallback((doc, hash = '') => {
+    setPendingAnchor(hash || null);
+    setSelectedDoc(doc);
+  }, []);
+
+  const { nodes: renderedMarkdown, headings } = useMemo(() => {
+    if (markdownState.status !== 'ready') return { nodes: null, headings: [] };
     return renderMarkdown(markdownState.content, {
       docs,
       findDoc,
-      onSelectDoc: setSelectedDoc,
+      onSelectDoc: handleSelectDoc,
+      onGoToAnchor: scrollToAnchor,
       repository: section.repository,
       selectedDoc,
     });
-  }, [docs, findDoc, markdownState, section.repository, selectedDoc]);
+  }, [
+    docs,
+    findDoc,
+    handleSelectDoc,
+    markdownState,
+    scrollToAnchor,
+    section.repository,
+    selectedDoc,
+  ]);
+
+  // A `file.md#section` link has to wait for the new document to paint before
+  // its target id exists.
+  useEffect(() => {
+    if (!pendingAnchor || markdownState.status !== 'ready') return undefined;
+    const frame = window.requestAnimationFrame(() => {
+      scrollToAnchor(pendingAnchor);
+      setPendingAnchor(null);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [markdownState.status, pendingAnchor, renderedMarkdown, scrollToAnchor]);
+
+  const headingIds = useMemo(() => headings.map((heading) => heading.id), [headings]);
+  const activeHeadingId = useActiveSection(headingIds, TOC_ACTIVE_OFFSET);
 
   const readingMeta = useMemo(() => {
     if (!markdownState.content) return null;
@@ -408,19 +621,18 @@ const MarkdownDocs = ({ section, onReadingChange }) => {
   const sourceLabel =
     sourceState === 'live' ? 'Synced from GitHub' : 'Using saved module index';
 
-  const handleDocClick = (doc) => {
-    onReadingChange?.(true);
-    setSelectedDoc(doc);
-  };
-
   const handleBackClick = () => {
     onReadingChange?.(false);
     setSelectedDoc(null);
+    setPendingAnchor(null);
     setMarkdownState({ status: 'idle', content: '', error: null });
   };
 
   return (
-    <div className={`docs-file-manager${selectedDoc ? ' is-reading' : ''}`}>
+    <div
+      className={`docs-file-manager${selectedDoc ? ' is-reading' : ''}`}
+      ref={rootRef}
+    >
       <div className="docs-file-manager__toolbar">
         <label className="docs-search">
           <span>Search files</span>
@@ -466,7 +678,7 @@ const MarkdownDocs = ({ section, onReadingChange }) => {
                       key={doc.name}
                       className="docs-file-item"
                       type="button"
-                      onClick={() => handleDocClick(doc)}
+                      onClick={() => handleSelectDoc(doc)}
                     >
                       <span className="docs-file-item__icon" aria-hidden="true">
                         <Icon name="document" />
@@ -500,7 +712,7 @@ const MarkdownDocs = ({ section, onReadingChange }) => {
             inert={!selectedDoc ? '' : undefined}
           >
             <div className="docs-document-view">
-              <div className="docs-document-view__header">
+              <div className="docs-document-view__header" ref={headerRef}>
                 <button
                   className="docs-document-view__back"
                   type="button"
@@ -531,7 +743,7 @@ const MarkdownDocs = ({ section, onReadingChange }) => {
                 </div>
               </div>
 
-              <div className="docs-document-view__body" ref={contentRef}>
+              <div className="docs-document-view__body">
                 {markdownState.status === 'loading' && (
                   <div className="docs-state">
                     <span className="docs-state__pulse" aria-hidden="true" />
@@ -547,7 +759,35 @@ const MarkdownDocs = ({ section, onReadingChange }) => {
                 )}
 
                 {markdownState.status === 'ready' && (
-                  <div className="markdown-body">{renderedMarkdown}</div>
+                  <div className="docs-reader">
+                    {headings.length > 2 && (
+                      <nav className="docs-toc" aria-label="Document contents">
+                        <p className="docs-toc__title">In this document</p>
+                        <ol className="docs-toc__list">
+                          {headings.map((heading) => (
+                            <li
+                              key={heading.id}
+                              className={`docs-toc__item docs-toc__item--${heading.level}${
+                                heading.id === activeHeadingId ? ' is-active' : ''
+                              }`}
+                            >
+                              <a
+                                href={`#${heading.id}`}
+                                onClick={(event) => {
+                                  event.preventDefault();
+                                  scrollToAnchor(heading.id);
+                                }}
+                              >
+                                {heading.text}
+                              </a>
+                            </li>
+                          ))}
+                        </ol>
+                      </nav>
+                    )}
+
+                    <article className="markdown-body">{renderedMarkdown}</article>
+                  </div>
                 )}
               </div>
             </div>
